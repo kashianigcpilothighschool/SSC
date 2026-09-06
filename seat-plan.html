@@ -483,7 +483,6 @@
     <div class="container">
         <div class="header">
             <h1>পরীক্ষা কক্ষের তথ্য</h1>
-            <p>এস.এস.সি পরীক্ষা কেন্দ্র — সিট প্লান তৈরির ফর্ম</p>
         </div>
 
         <div class="body-pad">
@@ -613,10 +612,7 @@
         <div class="seat-plan-section">
             <div class="section-heading" style="margin-top: 0;">
                 <span class="section-num" style="background: var(--gold); color: var(--navy-dark);">৩</span>
-                <div class="seat-plan-header" style="margin-bottom: 0;">
-                    <h2>সিট প্লান জেনারেটর</h2>
-                    <p>কলাম অনুযায়ী সিট বিন্যাস</p>
-                </div>
+                <div class="seat-plan-header" style="margin-bottom: 0;"></div>
             </div>
 
             <div class="alert alert-error" id="errorAlert"></div>
@@ -1026,6 +1022,14 @@
             log('HTML পেজ লোড হয়েছে', 'success');
 
             const columns = ['C', 'D', 'F', 'G', 'I', 'J'];
+            const columnLabels = {
+                'C': 'বাম পার্শ্ব (ওয়াল)',
+                'D': 'বাম পার্শ্ব (রোড)',
+                'F': 'মধ্য (বাম)',
+                'G': 'মধ্য (ডান)',
+                'I': 'ডান পার্শ্ব (রোড)',
+                'J': 'ডান পার্শ্ব (ওয়াল)'
+            };
             const container = document.getElementById('columnInputs');
 
             columns.forEach((col) => {
@@ -1035,9 +1039,11 @@
                 div.className = 'column-input';
                 div.id = 'column_' + col;
 
+                const labelText = columnLabels[col] || ('কলাম ' + col);
+
                 div.innerHTML = `
                     <div class="column-header">
-                        <span class="column-label">কলাম ${col}: (ক্রমানুসারে সাজানো)</span>
+                        <span class="column-label">${labelText}: (ক্রমানুসারে সাজানো)</span>
                         <button type="button" class="add-range-btn" onclick="addRange('${col}')">+ রেঞ্জ যোগ করুন</button>
                     </div>
                     <div id="ranges_${col}"></div>
