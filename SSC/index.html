@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পরীক্ষা কক্ষের তথ্য</title>
+    <style>
+        body {
+            font-family: 'SolaimanLipi', 'Kalpurush', Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #2c5aa0;
+        }
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .room-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .info-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        .info-card h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .info-value {
+            color: #212529;
+        }
+        
+        .building-floor-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .building-floor-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .building-floor-item label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .form-section {
+            background-color: #e8f4fd;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 2px solid #2c5aa0;
+        }
+        
+        .form-section h3 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 80px;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+        }
+        
+        .form-row label {
+            font-weight: bold;
+            color: #2c5aa0;
+        }
+        
+        .form-row select, .form-row input[type="number"], .form-row input {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .form-row select:focus, .form-row input[type="number"]:focus, .form-row input:focus {
+            border-color: #2c5aa0;
+            outline: none;
+            box-shadow: 0 0 5px rgba(44, 90, 160, 0.3);
+        }
+        
+        .form-row input[type="number"]::-webkit-outer-spin-button,
+        .form-row input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .form-row input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        
+        .student-count {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            padding: 8px 5px;
+            border: none;
+        }
+        
+        .add-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .add-btn:hover {
+            background-color: #218838;
+        }
+        
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .remove-btn:hover {
+            background-color: #c82333;
+        }
+
+        .total-students {
+            background-color: #dc3545;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .seat-plan-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            color: white;
+        }
+
+        .seat-plan-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .seat-plan-header h2 {
+            margin: 0;
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .column-input {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .column-label {
+            font-weight: 600;
+            color: white;
+            font-size: 16px;
+        }
+
+        .add-range-btn {
+            background: rgba(76, 175, 80, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .add-range-btn:hover {
+            background: rgba(76, 175, 80, 1);
+        }
+
+        .range-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .range-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            min-width: 60px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex: 1;
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .column-input input {
+            width: 85px;
+            padding: 8px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .column-input input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        .remove-range-btn {
+            background: rgba(244, 67, 54, 0.8);
+            color: white;
+            border: none;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 30px;
+        }
+
+        .remove-range-btn:hover {
+            background: rgba(244, 67, 54, 1);
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 250px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-right: 15px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .test-btn {
+            background: linear-gradient(135deg, #ff7b00, #ff5722);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 123, 0, 0.4);
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, #6f42c1, #5a2d91);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            .print-content, .print-content * {
+                visibility: visible;
+            }
+            
+            .print-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .container {
+                box-shadow: none;
+                margin: 0;
+                padding: 20px;
+                max-width: none;
+            }
+            
+            .seat-plan-section {
+                background: white !important;
+                color: black !important;
+                padding: 20px;
+                border: 2px solid #000;
+            }
+            
+            .column-input {
+                background: #f9f9f9 !important;
+                border: 1px solid #333 !important;
+                color: black !important;
+            }
+            
+            .range-item {
+                background: white !important;
+                border: 1px solid #333 !important;
+                color: black !important;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(248, 215, 218, 0.9);
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-success {
+            background: rgba(212, 237, 218, 0.9);
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .debug-info {
+            background: rgba(231, 243, 255, 0.9);
+            border: 1px solid #b8daff;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            color: #004085;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .test-data-display {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .room-info {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .building-floor-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .direction-grid {
+                grid-template-columns: 1fr;
+            }
+            .seat-plan-section {
+                padding: 20px;
+            }
+            .submit-btn {
+                min-width: 200px;
+                font-size: 16px;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            .test-btn {
+                min-width: 150px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>পরীক্ষা কক্ষের তথ্য</h1>
+        </div>
+
+        <div class="room-info">
+            <div class="info-card">
+                <h3>কক্ষ নং নির্বাচন</h3>
+                <div class="info-item">
+                    <span class="info-label">কক্ষ নং:</span>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="roomNumber" value="১" style="padding: 5px 10px; border: 2px solid #2c5aa0; border-radius: 5px; width: 60px; text-align: center; font-weight: bold; color: #2c5aa0;">
+                        <select id="genderSelect" style="padding: 5px; border: 2px solid #2c5aa0; border-radius: 5px; background-color: white; color: #2c5aa0; font-weight: bold;">
+                            <option value="বালক">বালক</option>
+                            <option value="বালিকা">বালিকা</option>
+                            <option value="বালক ও বালিকা">বালক ও বালিকা</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">বিভাগ:</span>
+                    <select id="departmentSelect" style="padding: 5px; border: 2px solid #2c5aa0; border-radius: 5px; background-color: white; color: #2c5aa0; font-weight: bold;">
+                        <option value="বিজ্ঞান">বিজ্ঞান</option>
+                        <option value="মানবিক">মানবিক</option>
+                        <option value="ব্যবসায় শিক্ষা">ব্যবসায় শিক্ষা</option>
+                        <option value="বিজ্ঞান ও মানবিক">বিজ্ঞান ও মানবিক</option>
+                        <option value="সকল বিভাগ">সকল বিভাগ</option>
+                    </select>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">বেঞ্চের সংখ্যা:</span>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <input type="number" id="benchCount" value="25" min="1" style="padding: 5px; border: 2px solid #2c5aa0; border-radius: 5px; width: 80px; text-align: center; font-weight: bold;">
+                        <span>খানা</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">পরীক্ষার্থীর সংখ্যা:</span>
+                    <span class="info-value" id="totalStudentsInfo">০ জন</span>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3>অবস্থান</h3>
+                <div class="building-floor-row">
+                    <div class="building-floor-item">
+                        <label>ভবন:</label>
+                        <select id="buildingSelect" style="padding: 5px; border: 2px solid #2c5aa0; border-radius: 5px; background-color: white; color: #2c5aa0; font-weight: bold;">
+                            <option value="পশ্চিম পার্শ্বের ভবন">পশ্চিম পার্শ্বের ভবন</option>
+                            <option value="পূর্ব পার্শ্বের ভবন">পূর্ব পার্শ্বের ভবন</option>
+                            <option value="উত্তর পার্শ্বের ভবন">উত্তর পার্শ্বের ভবন</option>
+                            <option value="দক্ষিণ পার্শ্বের ভবন">দক্ষিণ পার্শ্বের ভবন</option>
+                            <option value="প্রধান ভবন">প্রধান ভবন</option>
+                        </select>
+                    </div>
+                    <div class="building-floor-item">
+                        <label>তলা:</label>
+                        <select id="floorSelect" style="padding: 5px; border: 2px solid #2c5aa0; border-radius: 5px; background-color: white; color: #2c5aa0; font-weight: bold;">
+                            <option value=" নিচতলা"> নিচতলা</option>
+                            <option value="২য় তলা" selected>২য় তলা</option>
+                            <option value="৩য় তলা">৩য় তলা</option>
+                            <option value="৪র্থ তলা">৪র্থ তলা</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="building-floor-row" style="margin-top: 15px;">
+                    <div class="building-floor-item">
+                        <label>বসার দিক:</label>
+                        <select id="directionSelect" style="padding: 5px; border: 2px solid #2c5aa0; border-radius: 5px; background-color: white; color: #2c5aa0; font-weight: bold;" onchange="updateDirectionInfo()">
+                            <option value="">নির্বাচন করুন</option>
+                            <option value="উত্তর মুখী">উত্তর মুখী</option>
+                            <option value="দক্ষিণ মুখী">দক্ষিণ মুখী</option>
+                            <option value="পূর্ব মুখী">পূর্ব মুখী</option>
+                            <option value="পশ্চিম মুখী">পশ্চিম মুখী</option>
+                        </select>
+                    </div>
+                    <div id="directionNote" style="padding: 8px; background-color: rgba(255,255,255,0.7); border-radius: 5px; font-size: 12px; color: #2c5aa0; display: none; border: 1px solid #2c5aa0;">
+                        <span id="directionNoteText"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>বিদ্যালয়ের নাম, রোল নম্বর ও শিক্ষার্থী সংখ্যা</h3>
+            <div id="schoolForms">
+                <div class="form-row">
+                    <select class="school-select" onchange="updateTotal()">
+                        <option value="">বিদ্যালয় নির্বাচন করুন</option>
+                        <option value="জাটিগ্রাম মমতাজ উদ্দিন মেমোরিয়াল মাধ্যমিক বিদ্যালয়">জাটিগ্রাম মমতাজ উদ্দিন মেমোরিয়াল মাধ্যমিক বিদ্যালয়</option>
+                        <option value="মালা শহীদ আসাদুজ্জামান উচ্চ বিদ্যালয়">মালা শহীদ আসাদুজ্জামান উচ্চ বিদ্যালয়</option>
+                        <option value="পোনা এম এ খালেক উচ্চ বিদ্যালয়">পোনা এম এ খালেক উচ্চ বিদ্যালয়</option>
+                        <option value="নায়েবুননেসা ইনস্টিটিউশন">নায়েবুননেসা ইনস্টিটিউশন</option>
+                        <option value="ধানকোড়া উচ্চ বিদ্যালয়">ধানকোড়া উচ্চ বিদ্যালয়</option>
+                        <option value="কাশিয়ানী গিরীশ চন্দ্র পাইলট উচ্চ বিদ্যালয়">কাশিয়ানী গিরীশ চন্দ্র পাইলট উচ্চ বিদ্যালয়</option>
+                        <option value="জয়নগর মাধ্যমিক বিদ্যালয়">জয়নগর মাধ্যমিক বিদ্যালয়</option>
+                        <option value="জয়নগর মাধ্যমিক বালিকা বিদ্যালয়">জয়নগর মাধ্যমিক বালিকা বিদ্যালয়</option>
+                        <option value="ভাটিয়াপাড়া উচ্চ বিদ্যালয়">ভাটিয়াপাড়া উচ্চ বিদ্যালয়</option>
+                        <option value="এম.এ.খালেক সরকারি বালিকা উচ্চ বিদ্যালয়">এম.এ.খালেক সরকারি বালিকা উচ্চ বিদ্যালয়</option>
+                        <option value="চরভাটপাড়া উচ্চ বিদ্যালয়">চরভাটপাড়া উচ্চ বিদ্যালয়</option>
+                         <option value="সাজাইল গোপীমোহন উচ্চ বিদ্যালয়">সাজাইল গোপীমোহন উচ্চ বিদ্যালয়</option>
+                          <option value="রামদিয়া শ্রীকৃষ্ণ শশী কমল বিদ্যাপীঠ">রামদিয়া শ্রীকৃষ্ণ শশী কমল বিদ্যাপীঠ</option>
+                        <option value="আলহাজ্ব আব্দুল গণি উচ্চ বিদ্যালয়">আলহাজ্ব আব্দুল গণি উচ্চ বিদ্যালয়</option>
+                    </select>
+                    <input type="number" placeholder="শুরুর রোল" class="start-roll" min="1" maxlength="6" oninput="handleRollInput(this, 'start')">
+                    <input type="number" placeholder="শেষের রোল" class="end-roll" min="1" maxlength="6" oninput="handleRollInput(this, 'end')">
+                    <div class="student-count">০</div>
+                    <button type="button" class="remove-btn" onclick="removeRow(this)" title="সরান">✕</button>
+                </div>
+            </div>
+            <button type="button" class="add-btn" onclick="addNewRow()">+ নতুন বিদ্যালয় যোগ করুন</button>
+        </div>
+
+        <div class="total-students" id="totalStudents">
+            মোট পরীক্ষার্থী: ০ জন
+        </div>
+
+        <!-- সিট প্লান জেনারেটর সেকশন -->
+        <div class="seat-plan-section">
+            <div class="seat-plan-header">
+                <h2>সিট প্লান জেনারেটর</h2>
+                <p>কলাম অনুযায়ী সিট বিন্যাস</p>
+            </div>
+            
+            <div class="alert alert-error" id="errorAlert"></div>
+            <div class="alert alert-success" id="successAlert"></div>
+            <div class="debug-info" id="debugInfo" style="display: none;"></div>
+            
+            <div id="columnInputs"></div>
+            
+            <div class="loading" id="loadingDiv">
+                <div class="spinner"></div>
+                <p>সিট প্লান তৈরি হচ্ছে...</p>
+            </div>
+
+            <div id="testDataDisplay" class="test-data-display" style="display: none;"></div>
+            
+            <div class="submit-section">
+                <button type="button" class="submit-btn" id="submitBtn" onclick="generateSeatPlan()">
+                   সাবমিট
+                </button>
+                <button type="button" class="test-btn" id="testBtn" onclick="testDataCollection()">
+                    ডেটা পরীক্ষা করুন
+                </button>
+                <button type="button" class="print-btn no-print" onclick="printPage()">
+                    প্রিন্ট করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================
+        // এখানে আপনার Deploy করা Apps Script Web App URL বসান
+        // (Deploy → New deployment → Web app করার পর যে URL পাবেন)
+        // ========================
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzs9vkURAYUIC3ovDIpewPxrao9LrjzKAPRe0OmdL_QpZQH0EH4Gg3FNiLu_EHFCKkK_A/exec';
+
+        let rangeCounters = {};
+        
+        // Debug function
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString('bn-BD');
+            const debugDiv = document.getElementById('debugInfo');
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+            debugDiv.textContent += logEntry;
+            debugDiv.scrollTop = debugDiv.scrollHeight;
+            console.log(logEntry);
+        }
+
+        // দ্রুত জমা দেওয়ার জন্য কীবোর্ড শর্টকাট
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'Enter') {
+                event.preventDefault();
+                generateSeatPlan();
+            }
+            if (event.ctrlKey && event.key === 's') {
+                event.preventDefault();
+                testDataCollection();
+            }
+        });
+
+        function quickFillDefaults() {
+            const firstSchoolSelect = document.querySelector('#schoolForms .school-select');
+            if (firstSchoolSelect && !firstSchoolSelect.value) {
+                firstSchoolSelect.value = 'মালা শহীদ আসাদুজ্জামান উচ্চ বিদ্যালয়';
+            }
+            
+            const directionSelect = document.getElementById('directionSelect');
+            if (!directionSelect.value) {
+                directionSelect.value = 'উত্তর মুখী';
+                updateDirectionInfo();
+            }
+            
+            log('ডিফল্ট ভ্যালু সেট করা হয়েছে', 'info');
+        }
+
+        function quickValidation() {
+            const errors = [];
+            
+            if (!document.getElementById('roomNumber').value.trim()) {
+                errors.push('কক্ষ নম্বর দিন');
+            }
+            
+            if (!document.getElementById('directionSelect').value) {
+                errors.push('বসার দিক নির্বাচন করুন');
+            }
+            
+            const schoolRows = document.querySelectorAll('#schoolForms .form-row');
+            let hasValidSchool = false;
+            
+            schoolRows.forEach(row => {
+                const school = row.querySelector('.school-select').value;
+                const startRoll = row.querySelector('.start-roll').value;
+                const endRoll = row.querySelector('.end-roll').value;
+                
+                if (school && startRoll && endRoll) {
+                    hasValidSchool = true;
+                }
+            });
+            
+            if (!hasValidSchool) {
+                errors.push('অন্তত একটি বিদ্যালয়ের সম্পূর্ণ তথ্য দিন');
+            }
+            
+            const columns = ['C', 'D', 'F', 'G', 'I', 'J'];
+            let totalSeats = 0;
+            
+            columns.forEach(col => {
+                const ranges = document.querySelectorAll(`#ranges_${col} .range-item`);
+                ranges.forEach(range => {
+                    const seatCount = parseInt(range.querySelector('input[id*="seat_count"]').value) || 0;
+                    totalSeats += seatCount;
+                });
+            });
+            
+            if (totalSeats === 0) {
+                errors.push('অন্তত একটি কলামে সিট সংখ্যা দিন');
+            }
+            
+            return errors;
+        }
+
+        // দ্রুত সিট প্লান জেনারেট (fetch() দিয়ে Apps Script Web App কল করে)
+        function fastGenerateSeatPlan() {
+            log('দ্রুত সিট প্লান জেনারেশন শুরু...', 'info');
+            
+            const errors = quickValidation();
+            if (errors.length > 0) {
+                showAlert('ত্রুটি: ' + errors.join(', '), 'error');
+                return;
+            }
+
+            if (!WEB_APP_URL || WEB_APP_URL.indexOf('এখানে') !== -1) {
+                showAlert('WEB_APP_URL সেট করা হয়নি। কোডের উপরে সঠিক Web App URL বসান।', 'error');
+                return;
+            }
+            
+            const loadingDiv = document.getElementById('loadingDiv');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            loadingDiv.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'জমা হচ্ছে...';
+            
+            try {
+                const allData = collectAllData();
+                log('Apps Script Web App-এ fetch() দিয়ে পাঠানো হচ্ছে...', 'info');
+
+                fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        // application/json দিলে CORS preflight (OPTIONS) হবে, যা Apps Script সাপোর্ট করে না।
+                        // তাই text/plain ব্যবহার করা হচ্ছে।
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify(allData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ত্রুটি: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    loadingDiv.style.display = 'none';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'সিট প্লান তৈরি করুন';
+
+                    if (result && result.success) {
+                        showAlert('সিট প্লান সফলভাবে তৈরি হয়েছে!', 'success');
+                        log('সফল: ' + JSON.stringify(result), 'success');
+                    } else {
+                        showAlert((result && result.message) || 'সমস্যা হয়েছে', 'error');
+                        log('ব্যর্থ: ' + JSON.stringify(result), 'error');
+                    }
+                })
+                .catch(error => {
+                    loadingDiv.style.display = 'none';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'সিট প্লান তৈরি করুন';
+                    showAlert('সার্ভার ত্রুটি: ' + error.message, 'error');
+                    log('fetch ত্রুটি: ' + error.message, 'error');
+                });
+
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'সিট প্লান তৈরি করুন';
+                showAlert('ত্রুটি: ' + error.message, 'error');
+            }
+        }
+
+        function printPage() {
+            log('প্রিন্ট ফাংশন চালু...', 'info');
+            
+            try {
+                const container = document.querySelector('.container');
+                container.classList.add('print-content');
+                
+                const hiddenElements = document.querySelectorAll('.loading, .alert, .debug-info, #testDataDisplay');
+                hiddenElements.forEach(el => el.style.display = 'none');
+                
+                window.print();
+                
+                setTimeout(() => {
+                    container.classList.remove('print-content');
+                }, 1000);
+                
+                log('প্রিন্ট ডায়ালগ খোলা হয়েছে', 'success');
+                
+            } catch (error) {
+                log(`প্রিন্টে সমস্যা: ${error.message}`, 'error');
+                showAlert('প্রিন্ট করতে সমস্যা হয়েছে: ' + error.message, 'error');
+            }
+        }
+
+        // উন্নত রোল ইনপুট হ্যান্ডলিং ফাংশন
+        function handleRollInput(input, type) {
+            const value = input.value;
+            const row = input.parentElement;
+            
+            const numericValue = value.replace(/[^0-9]/g, '');
+            
+            if (numericValue.length > 6) {
+                input.value = numericValue.substring(0, 6);
+                return;
+            }
+            
+            input.value = numericValue;
+            
+            if (numericValue.length === 6) {
+                if (type === 'start') {
+                    const endRollInput = row.querySelector('.end-roll');
+                    if (endRollInput) {
+                        setTimeout(() => {
+                            endRollInput.focus();
+                            endRollInput.select();
+                        }, 100);
+                    }
+                } else if (type === 'end') {
+                    const nextRow = row.parentElement.nextElementSibling;
+                    if (nextRow && nextRow.classList.contains('form-row')) {
+                        const nextSchoolSelect = nextRow.querySelector('.school-select');
+                        if (nextSchoolSelect) {
+                            setTimeout(() => {
+                                nextSchoolSelect.focus();
+                            }, 100);
+                        }
+                    } else {
+                        addNewRow();
+                        setTimeout(() => {
+                            const newRows = document.querySelectorAll('#schoolForms .form-row');
+                            const lastRow = newRows[newRows.length - 1];
+                            const schoolSelect = lastRow.querySelector('.school-select');
+                            if (schoolSelect) {
+                                schoolSelect.focus();
+                            }
+                        }, 200);
+                    }
+                }
+                
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+                
+                log(`${type === 'start' ? 'শুরুর' : 'শেষের'} রোল ৬ ডিজিট পূর্ণ হয়েছে: ${numericValue}`, 'info');
+            }
+            
+            if (numericValue.length > 0) {
+                const rollNumber = parseInt(numericValue);
+                if (rollNumber < 100000) {
+                    input.style.borderColor = '#ffc107';
+                } else {
+                    input.style.borderColor = '#28a745';
+                }
+            } else {
+                input.style.borderColor = '#2c5aa0';
+            }
+            
+            updateStudentCount(row);
+        }
+
+        function handleKeyPress(event, input, type) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const value = input.value.replace(/[^0-9]/g, '');
+                if (value.length >= 5) {
+                    handleRollInput(input, type);
+                }
+            }
+            
+            if (event.key === 'Tab' && input.value.length === 6) {
+                log('Tab key pressed with complete 6-digit roll', 'info');
+            }
+            
+            const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight'];
+            if (!allowedKeys.includes(event.key) && (event.key < '0' || event.key > '9')) {
+                event.preventDefault();
+            }
+        }
+
+        function updateDirectionInfo() {
+            const directionSelect = document.getElementById('directionSelect');
+            const directionNote = document.getElementById('directionNote');
+            const directionNoteText = document.getElementById('directionNoteText');
+            const compassDirections = document.querySelectorAll('.compass-direction[data-direction]');
+            
+            const selectedDirection = directionSelect.value;
+            
+            compassDirections.forEach(compass => {
+                compass.classList.remove('active');
+                if (compass.getAttribute('data-direction') === selectedDirection) {
+                    compass.classList.add('active');
+                }
+            });
+            
+            if (selectedDirection) {
+                const notes = {
+                    'উত্তর মুখী': '🔺 পরীক্ষার্থীরা উত্তর দিকে মুখ করে বসবেন। এটি সাধারণত প্রধান এবং সবচেয়ে পছন্দের দিক।',
+                    'দক্ষিণ মুখী': '🔻 পরীক্ষার্থীরা দক্ষিণ দিকে মুখ করে বসবেন। এই দিকে সূর্যের আলো ভালো পাওয়া যায়।',
+                    'পূর্ব মুখী': '▶ পরীক্ষার্থীরা পূর্ব দিকে মুখ করে বসবেন। সকালের সূর্যের আলো এই দিকে আসে।',
+                    'পশ্চিম মুখী': '◀ পরীক্ষার্থীরা পশ্চিম দিকে মুখ করে বসবেন। বিকালে এই দিকে রোদ থাকে।',
+                    'উত্তর-পূর্ব মুখী': '↗ পরীক্ষার্থীরা উত্তর-পূর্ব কোণের দিকে মুখ করে বসবেন।',
+                    'উত্তর-পশ্চিম মুখী': '↖ পরীক্ষার্থীরা উত্তর-পশ্চিম কোণের দিকে মুখ করে বসবেন।',
+                    'দক্ষিণ-পূর্ব মুখী': '↘ পরীক্ষার্থীরা দক্ষিণ-পূর্ব কোণের দিকে মুখ করে বসবেন।',
+                    'দক্ষিণ-পশ্চিম মুখী': '↙ পরীক্ষার্থীরা দক্ষিণ-পশ্চিম কোণের দিকে মুখ করে বসবেন।'
+                };
+                
+                directionNoteText.innerHTML = notes[selectedDirection];
+                directionNote.classList.add('show');
+                log(`দিক নির্বাচন: ${selectedDirection}`, 'info');
+            } else {
+                directionNote.classList.remove('show');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const compassDirections = document.querySelectorAll('.compass-direction[data-direction]');
+            compassDirections.forEach(compass => {
+                compass.addEventListener('click', function() {
+                    const direction = this.getAttribute('data-direction');
+                    document.getElementById('directionSelect').value = direction;
+                    updateDirectionInfo();
+                });
+            });
+        });
+
+        function calculateStudents(startRoll, endRoll) {
+            if (startRoll && endRoll && !isNaN(startRoll) && !isNaN(endRoll)) {
+                return Math.max(0, parseInt(endRoll) - parseInt(startRoll) + 1);
+            }
+            return 0;
+        }
+
+        function updateStudentCount(row) {
+            const startRoll = row.querySelector('.start-roll').value;
+            const endRoll = row.querySelector('.end-roll').value;
+            const studentCount = calculateStudents(startRoll, endRoll);
+            row.querySelector('.student-count').textContent = studentCount;
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let total = 0;
+            
+            const formRows = document.querySelectorAll('#schoolForms .form-row');
+            formRows.forEach(row => {
+                const schoolName = row.querySelector('.school-select').value;
+                const startRoll = row.querySelector('.start-roll').value;
+                const endRoll = row.querySelector('.end-roll').value;
+                
+                if (schoolName && startRoll && endRoll) {
+                    const students = calculateStudents(startRoll, endRoll);
+                    total += students;
+                }
+            });
+            
+            document.getElementById('totalStudents').textContent = `মোট পরীক্ষার্থী: ${total} জন`;
+            document.getElementById('totalStudentsInfo').textContent = `${total} জন`;
+        }
+
+        function addNewRow() {
+            const schoolForms = document.getElementById('schoolForms');
+            const newRow = document.createElement('div');
+            newRow.className = 'form-row';
+            newRow.innerHTML = `
+                <select class="school-select" onchange="updateTotal()">
+                    <option value="">বিদ্যালয় নির্বাচন করুন</option>
+                     <option value="জাটিগ্রাম মমতাজ উদ্দিন মেমোরিয়াল মাধ্যমিক বিদ্যালয়">জাটিগ্রাম মমতাজ উদ্দিন মেমোরিয়াল মাধ্যমিক বিদ্যালয়</option>
+                        <option value="মালা শহীদ আসাদুজ্জামান উচ্চ বিদ্যালয়">মালা শহীদ আসাদুজ্জামান উচ্চ বিদ্যালয়</option>
+                        <option value="পোনা এম এ খালেক উচ্চ বিদ্যালয়">পোনা এম এ খালেক উচ্চ বিদ্যালয়</option>
+                        <option value="নায়েবুননেসা ইনস্টিটিউশন">নায়েবুননেসা ইনস্টিটিউশন</option>
+                        <option value="ধানকোড়া উচ্চ বিদ্যালয়">ধানকোড়া উচ্চ বিদ্যালয়</option>
+                        <option value="কাশিয়ানী গিরীশ চন্দ্র পাইলট উচ্চ বিদ্যালয়">কাশিয়ানী গিরীশ চন্দ্র পাইলট উচ্চ বিদ্যালয়</option>
+                        <option value="জয়নগর মাধ্যমিক বিদ্যালয়">জয়নগর মাধ্যমিক বিদ্যালয়</option>
+                        <option value="জয়নগর মাধ্যমিক বালিকা বিদ্যালয়">জয়নগর মাধ্যমিক বালিকা বিদ্যালয়</option>
+                        <option value="ভাটিয়াপাড়া উচ্চ বিদ্যালয়">ভাটিয়াপাড়া উচ্চ বিদ্যালয়</option>
+                        <option value="এম.এ.খালেক সরকারি বালিকা উচ্চ বিদ্যালয়">এম.এ.খালেক সরকারি বালিকা উচ্চ বিদ্যালয়</option>
+                        <option value="চরভাটপাড়া উচ্চ বিদ্যালয়">চরভাটপাড়া উচ্চ বিদ্যালয়</option>
+                         <option value="সাজাইল গোপীমোহন উচ্চ বিদ্যালয়">সাজাইল গোপীমোহন উচ্চ বিদ্যালয়</option>
+                          <option value="রামদিয়া শ্রীকৃষ্ণ শশী কমল বিদ্যাপীঠ">রামদিয়া শ্রীকৃষ্ণ শশী কমল বিদ্যাপীঠ</option>
+                        <option value="আলহাজ্ব আব্দুল গণি উচ্চ বিদ্যালয়">আলহাজ্ব আব্দুল গণি উচ্চ বিদ্যালয়</option>
+                </select>
+                <input type="number" placeholder="শুরুর রোল" class="start-roll" min="1" maxlength="6" oninput="handleRollInput(this, 'start')" onkeydown="handleKeyPress(event, this, 'start')">
+                <input type="number" placeholder="শেষের রোল" class="end-roll" min="1" maxlength="6" oninput="handleRollInput(this, 'end')" onkeydown="handleKeyPress(event, this, 'end')">
+                <div class="student-count">০</div>
+                <button type="button" class="remove-btn" onclick="removeRow(this)" title="সরান">✕</button>
+            `;
+            schoolForms.appendChild(newRow);
+            log('নতুন বিদ্যালয়ের সারি যোগ করা হয়েছে');
+        }
+
+        function removeRow(button) {
+            const row = button.parentElement;
+            row.remove();
+            updateTotal();
+            log('বিদ্যালয়ের সারি সরানো হয়েছে');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            log('HTML পেজ লোড হয়েছে', 'success');
+            
+            const columns = ['C', 'D', 'F', 'G', 'I', 'J'];
+            const container = document.getElementById('columnInputs');
+            
+            columns.forEach((col) => {
+                rangeCounters[col] = 1;
+                
+                const div = document.createElement('div');
+                div.className = 'column-input';
+                div.id = 'column_' + col;
+                
+                div.innerHTML = `
+                    <div class="column-header">
+                        <span class="column-label">কলাম ${col}: (ক্রমানুসারে সাজানো)</span>
+                        <button type="button" class="add-range-btn" onclick="addRange('${col}')">+ রেঞ্জ যোগ করুন</button>
+                    </div>
+                    <div id="ranges_${col}"></div>
+                `;
+                
+                container.appendChild(div);
+                addRange(col);
+            });
+            
+            const existingInputs = document.querySelectorAll('.start-roll, .end-roll');
+            existingInputs.forEach(input => {
+                const type = input.classList.contains('start-roll') ? 'start' : 'end';
+                input.setAttribute('onkeydown', `handleKeyPress(event, this, '${type}')`);
+            });
+            
+            updateTotal();
+            log('ফর্ম ইনিশিয়ালাইজ সম্পন্ন', 'success');
+        });
+
+        function addRange(col) {
+            const container = document.getElementById('ranges_' + col);
+            const rangeDiv = document.createElement('div');
+            rangeDiv.className = 'range-item';
+            rangeDiv.id = 'range_' + col + '_' + rangeCounters[col];
+            
+            rangeDiv.innerHTML = `
+    <span class="range-label">রেঞ্জ ${container.children.length + 1}:</span>
+    <div class="input-group">
+
+        <div class="input-wrapper">
+            <div class="input-label">শুরুর রোল</div>
+            <input type="text" maxlength="6"
+                id="start_roll_${col}_${rangeCounters[col]}"
+                oninput="updateEndRoll('${col}', '${rangeCounters[col]}')" />
+        </div>
+
+        <div class="input-wrapper">
+            <div class="input-label">সিট সংখ্যা</div>
+            <input type="number"
+                id="seat_count_${col}_${rangeCounters[col]}"
+                oninput="updateEndRoll('${col}', '${rangeCounters[col]}')" />
+        </div>
+
+        <div class="input-wrapper">
+            <div class="input-label">শেষ রোল</div>
+            <input type="text"
+                id="end_roll_${col}_${rangeCounters[col]}"
+                readonly />
+        </div>
+
+    </div>
+
+    <button type="button" class="remove-range-btn"
+        onclick="removeRange('${col}', '${rangeCounters[col]}')">-</button>
+`;
+            
+            container.appendChild(rangeDiv);
+            rangeCounters[col]++;
+            updateRangeLabels(col);
+            log(`কলাম ${col} এ নতুন রেঞ্জ যোগ করা হয়েছে`);
+        }
+        
+        function removeRange(col, id) {
+            const container = document.getElementById('ranges_' + col);
+            const rangeDiv = document.getElementById('range_' + col + '_' + id);
+            
+            if (container.children.length <= 1) {
+                showAlert('অন্তত একটি রেঞ্জ থাকতে হবে!', 'error');
+                return;
+            }
+            
+            container.removeChild(rangeDiv);
+            updateRangeLabels(col);
+            log(`কলাম ${col} থেকে রেঞ্জ সরানো হয়েছে`);
+        }
+        
+        function updateRangeLabels(col) {
+            const container = document.getElementById('ranges_' + col);
+            const ranges = container.children;
+            
+            for (let i = 0; i < ranges.length; i++) {
+                const label = ranges[i].querySelector('.range-label');
+                label.textContent = 'রেঞ্জ ' + (i + 1) + ':';
+            }
+        }
+        
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById(type + 'Alert');
+            alertDiv.textContent = message;
+            alertDiv.style.display = 'block';
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+            log(message, type);
+        }
+
+        function collectAllData() {
+            log('সকল ডেটা সংগ্রহ করা শুরু...');
+            
+            const roomData = {
+                roomNumber: document.getElementById('roomNumber').value.trim(),
+                gender: document.getElementById('genderSelect').value,
+                department: document.getElementById('departmentSelect').value,
+                building: document.getElementById('buildingSelect').value,
+                floor: document.getElementById('floorSelect').value,
+                benchCount: parseInt(document.getElementById('benchCount').value),
+                direction: document.getElementById('directionSelect').value || 'নির্বাচিত নয়'
+            };
+            log(`রুম তথ্য: ${roomData.roomNumber} নম্বর কক্ষ, ${roomData.gender}, ${roomData.department}, ভবন: ${roomData.building}, তলা: ${roomData.floor}, বসার দিক: ${roomData.direction}`);
+
+            if (!roomData.direction || roomData.direction === 'নির্বাচিত নয়') {
+                log('সতর্কতা: বসার দিক নির্বাচন করা হয়নি', 'warning');
+                showAlert('বসার দিক নির্বাচন করুন!', 'error');
+            }
+            const schoolData = [];
+            const formRows = document.querySelectorAll('#schoolForms .form-row');
+            formRows.forEach((row, index) => {
+                const schoolName = row.querySelector('.school-select').value;
+                const startRoll = parseInt(row.querySelector('.start-roll').value);
+                const endRoll = parseInt(row.querySelector('.end-roll').value);
+                
+                if (schoolName && startRoll && endRoll && startRoll <= endRoll) {
+                    const studentCount = endRoll - startRoll + 1;
+                    schoolData.push({
+                        id: index + 1,
+                        name: schoolName,
+                        startRoll: startRoll,
+                        endRoll: endRoll,
+                        studentCount: studentCount
+                    });
+                    log(`বিদ্যালয় ${index + 1}: ${schoolName} - ${startRoll} থেকে ${endRoll} (${studentCount} জন)`);
+                }
+            });
+
+            const columns = ['C', 'D', 'F', 'G', 'I', 'J'];
+            const columnData = [];
+            
+            for (let i = 0; i < columns.length; i++) {
+                const col = columns[i];
+                const rangeContainer = document.getElementById('ranges_' + col);
+                
+                if (!rangeContainer) {
+                    log(`কলাম ${col} এর রেঞ্জ কন্টেইনার পাওয়া যায়নি`, 'error');
+                    continue;
+                }
+                
+                const ranges = rangeContainer.children;
+                const colRanges = [];
+                
+                for (let j = 0; j < ranges.length; j++) {
+                    const rangeDiv = ranges[j];
+                    const startRollInput = rangeDiv.querySelector('input[id^="start_roll_' + col + '_"]');
+                    const seatCountInput = rangeDiv.querySelector('input[id^="seat_count_' + col + '_"]');
+                    
+                    if (!startRollInput || !seatCountInput) {
+                        log(`কলাম ${col} রেঞ্জ ${j + 1} এর ইনপুট পাওয়া যায়নি`, 'error');
+                        continue;
+                    }
+                    
+                    const startRoll = parseInt(startRollInput.value);
+                    const seatCount = parseInt(seatCountInput.value);
+                    
+                    if (!isNaN(seatCount) && seatCount > 0) {
+                        colRanges.push({ 
+                            startRoll: isNaN(startRoll) ? 0 : startRoll, 
+                            count: seatCount 
+                        });
+                        log(`কলাম ${col} রেঞ্জ ${j + 1}: ${startRoll} থেকে ${seatCount} টি সিট`);
+                    }
+                }
+                
+                columnData.push({ ranges: colRanges });
+            }
+
+            const totalStudents = schoolData.reduce((sum, school) => sum + school.studentCount, 0);
+            const totalSeats = columnData.reduce((sum, col) => 
+                sum + col.ranges.reduce((colSum, range) => colSum + range.count, 0), 0
+            );
+
+            const allData = {
+                roomInfo: roomData,
+                schools: schoolData,
+                columnData: columnData,
+                totals: {
+                    totalStudents: totalStudents,
+                    totalSeats: totalSeats
+                }
+            };
+
+            log(`ডেটা সংগ্রহ সম্পন্ন - মোট ${totalStudents} জন ছাত্র, ${totalSeats} টি সিট`, 'success');
+            return allData;
+        }
+
+        function testDataCollection() {
+            log('ডেটা সংগ্রহ পরীক্ষা শুরু...', 'info');
+            
+            try {
+                const allData = collectAllData();
+                const displayDiv = document.getElementById('testDataDisplay');
+                displayDiv.textContent = JSON.stringify(allData, null, 2);
+                displayDiv.style.display = 'block';
+                
+                showAlert('ডেটা সংগ্রহ সফল! নিচে দেখুন।', 'success');
+                log('ডেটা পরীক্ষা সফল', 'success');
+                
+            } catch (error) {
+                log(`ডেটা পরীক্ষায় ত্রুটি: ${error.message}`, 'error');
+                showAlert('ডেটা সংগ্রহে সমস্যা: ' + error.message, 'error');
+            }
+        }
+        
+        function generateSeatPlan() {
+            fastGenerateSeatPlan();
+        }
+
+        log('স্ক্রিপ্ট লোড হয়েছে', 'success');
+
+        function updateEndRoll(col, id) {
+            const startEl = document.getElementById('start_roll_' + col + '_' + id);
+            const seatEl = document.getElementById('seat_count_' + col + '_' + id);
+            const endEl = document.getElementById('end_roll_' + col + '_' + id);
+
+            const start = parseInt(startEl.value);
+            const seat = parseInt(seatEl.value);
+
+            if (!isNaN(start) && !isNaN(seat) && seat > 0) {
+                endEl.value = start + seat - 1;
+            } else {
+                endEl.value = '';
+            }
+        }
+    </script>
+</body>
+</html>
