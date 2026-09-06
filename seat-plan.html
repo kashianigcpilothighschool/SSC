@@ -632,14 +632,27 @@
                 <button type="button" class="submit-btn" id="submitBtn" onclick="generateSeatPlan()">
                    সাবমিট
                 </button>
-                <button type="button" class="test-btn" id="testBtn" onclick="runSWSI()">
-                    SWSI
-                </button>
-                <button type="button" class="test-btn" id="iswsBtn" onclick="runISWS()">
-                    ISWS
-                </button>
                 <button type="button" class="print-btn no-print" onclick="printPage()">
                     প্রিন্ট করুন
+                </button>
+                <br>
+                <button type="button" class="test-btn" id="testBtn" onclick="runSWSI()" style="margin-top: 14px;">
+                    SWSI
+                </button>
+                <button type="button" class="test-btn" id="iswsBtn" onclick="runISWS()" style="margin-top: 14px;">
+                    ISWS
+                </button>
+                <button type="button" class="test-btn" id="extraBtn1" onclick="redirectToTarget()" style="margin-top: 14px;">
+                    বাটন ৩
+                </button>
+                <button type="button" class="test-btn" id="extraBtn2" onclick="redirectToTarget()" style="margin-top: 14px;">
+                    বাটন ৪
+                </button>
+                <button type="button" class="test-btn" id="extraBtn3" onclick="redirectToTarget()" style="margin-top: 14px;">
+                    বাটন ৫
+                </button>
+                <button type="button" class="test-btn" id="extraBtn4" onclick="redirectToTarget()" style="margin-top: 14px;">
+                    বাটন ৬
                 </button>
             </div>
         </div>
@@ -859,6 +872,10 @@
                 testBtn.textContent = 'SWSI';
                 showAlert('ত্রুটি: ' + error.message, 'error');
             }
+        }
+
+        function redirectToTarget() {
+            window.location.href = 'https://script.google.com/macros/s/AKfycbyxN479ZGL99Ib2bbKpfD1dUyUHnPFT1e3_B_DfMhQotmpD_MBa4O1ZtKOUlu997PO-aA/exec';
         }
 
         function runISWS() {
