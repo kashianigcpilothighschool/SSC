@@ -632,7 +632,7 @@
                 <button type="button" class="submit-btn" id="submitBtn" onclick="generateSeatPlan()">
                    সাবমিট
                 </button>
-                <button type="button" class="test-btn" id="testBtn" onclick="testDataCollection()">
+                <button type="button" class="test-btn" id="testBtn" onclick="runSWSI()">
                     SWSI
                 </button>
                 <button type="button" class="test-btn" id="iswsBtn" onclick="runISWS()">
@@ -792,6 +792,71 @@
                 loadingDiv.style.display = 'none';
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'সিট প্লান তৈরি করুন';
+                showAlert('ত্রুটি: ' + error.message, 'error');
+            }
+        }
+
+        function runSWSI() {
+            log('SWSI-এ ডেটা পাঠানো শুরু...', 'info');
+
+            const errors = quickValidation();
+            if (errors.length > 0) {
+                showAlert('ত্রুটি: ' + errors.join(', '), 'error');
+                return;
+            }
+
+            if (!WEB_APP_URL) {
+                showAlert('WEB_APP_URL সেট করা হয়নি।', 'error');
+                return;
+            }
+
+            const loadingDiv = document.getElementById('loadingDiv');
+            const testBtn = document.getElementById('testBtn');
+
+            loadingDiv.style.display = 'block';
+            testBtn.disabled = true;
+            testBtn.textContent = 'পাঠানো হচ্ছে...';
+
+            try {
+                const allData = collectAllData();
+                log('SWSI Web App-এ fetch() দিয়ে পাঠানো হচ্ছে...', 'info');
+
+                fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(allData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ত্রুটি: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    loadingDiv.style.display = 'none';
+                    testBtn.disabled = false;
+                    testBtn.textContent = 'SWSI';
+
+                    if (result && result.success) {
+                        showAlert('SWSI-এ সফলভাবে পাঠানো হয়েছে!', 'success');
+                        log('সফল: ' + JSON.stringify(result), 'success');
+                    } else {
+                        showAlert((result && result.message) || 'সমস্যা হয়েছে', 'error');
+                        log('ব্যর্থ: ' + JSON.stringify(result), 'error');
+                    }
+                })
+                .catch(error => {
+                    loadingDiv.style.display = 'none';
+                    testBtn.disabled = false;
+                    testBtn.textContent = 'SWSI';
+                    showAlert('সার্ভার ত্রুটি: ' + error.message, 'error');
+                    log('fetch ত্রুটি: ' + error.message, 'error');
+                });
+
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                testBtn.disabled = false;
+                testBtn.textContent = 'SWSI';
                 showAlert('ত্রুটি: ' + error.message, 'error');
             }
         }
