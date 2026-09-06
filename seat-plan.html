@@ -633,7 +633,10 @@
                    সাবমিট
                 </button>
                 <button type="button" class="test-btn" id="testBtn" onclick="testDataCollection()">
-                    ডেটা পরীক্ষা করুন
+                    SWSI
+                </button>
+                <button type="button" class="test-btn" id="iswsBtn" onclick="runISWS()">
+                    ISWS
                 </button>
                 <button type="button" class="print-btn no-print" onclick="printPage()">
                     প্রিন্ট করুন
@@ -657,7 +660,8 @@
         // ========================
         // এখানে আপনার Deploy করা Apps Script Web App URL বসান
         // ========================
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyTvtZlBNNPmIAyGhxjbw0xXR5Bahs7nxFhPLagcHQfnTocKU1OzEoj9JRpQXluvOSFAg/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyxN479ZGL99Ib2bbKpfD1dUyUHnPFT1e3_B_DfMhQotmpD_MBa4O1ZtKOUlu997PO-aA/exec';
+        const ISWS_URL = 'https://script.google.com/macros/s/AKfycbzMmx80idYxlmXUrX-V3vYXz6X7_JjAYVMe394Kbe-a8CvfHg6quyn5IFcKH6PcqUQuAw/exec';
 
         let rangeCounters = {};
 
@@ -788,6 +792,71 @@
                 loadingDiv.style.display = 'none';
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'সিট প্লান তৈরি করুন';
+                showAlert('ত্রুটি: ' + error.message, 'error');
+            }
+        }
+
+        function runISWS() {
+            log('ISWS-এ ডেটা পাঠানো শুরু...', 'info');
+
+            const errors = quickValidation();
+            if (errors.length > 0) {
+                showAlert('ত্রুটি: ' + errors.join(', '), 'error');
+                return;
+            }
+
+            if (!ISWS_URL) {
+                showAlert('ISWS_URL সেট করা হয়নি।', 'error');
+                return;
+            }
+
+            const loadingDiv = document.getElementById('loadingDiv');
+            const iswsBtn = document.getElementById('iswsBtn');
+
+            loadingDiv.style.display = 'block';
+            iswsBtn.disabled = true;
+            iswsBtn.textContent = 'পাঠানো হচ্ছে...';
+
+            try {
+                const allData = collectAllData();
+                log('ISWS Web App-এ fetch() দিয়ে পাঠানো হচ্ছে...', 'info');
+
+                fetch(ISWS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(allData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ত্রুটি: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    loadingDiv.style.display = 'none';
+                    iswsBtn.disabled = false;
+                    iswsBtn.textContent = 'ISWS';
+
+                    if (result && result.success) {
+                        showAlert('ISWS-এ সফলভাবে পাঠানো হয়েছে!', 'success');
+                        log('সফল: ' + JSON.stringify(result), 'success');
+                    } else {
+                        showAlert((result && result.message) || 'সমস্যা হয়েছে', 'error');
+                        log('ব্যর্থ: ' + JSON.stringify(result), 'error');
+                    }
+                })
+                .catch(error => {
+                    loadingDiv.style.display = 'none';
+                    iswsBtn.disabled = false;
+                    iswsBtn.textContent = 'ISWS';
+                    showAlert('সার্ভার ত্রুটি: ' + error.message, 'error');
+                    log('fetch ত্রুটি: ' + error.message, 'error');
+                });
+
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                iswsBtn.disabled = false;
+                iswsBtn.textContent = 'ISWS';
                 showAlert('ত্রুটি: ' + error.message, 'error');
             }
         }
