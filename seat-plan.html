@@ -60,7 +60,7 @@
         /* ===== হেডার ব্যানার ===== */
         .header {
             background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
-            padding: 38px 44px 32px;
+            padding: 16px 44px 14px;
             position: relative;
         }
         .header::after {
@@ -73,8 +73,8 @@
         .header h1 {
             font-family: 'Noto Serif Bengali', serif;
             color: #fff;
-            margin: 0 0 8px;
-            font-size: 27px;
+            margin: 0 0 4px;
+            font-size: 22px;
             font-weight: 600;
             letter-spacing: 0.2px;
         }
@@ -84,14 +84,14 @@
             font-size: 14px;
         }
 
-        .body-pad { padding: 36px 44px 8px; }
+        .body-pad { padding: 22px 44px 8px; }
 
         /* ===== সেকশন হেডিং ===== */
         .section-heading {
             display: flex;
             align-items: center;
             gap: 13px;
-            margin: 40px 0 20px;
+            margin: 20px 0 12px;
         }
         .section-heading:first-child { margin-top: 0; }
         .section-num {
@@ -561,8 +561,8 @@
 
         @media (max-width: 768px) {
             body { padding: 16px 10px 40px; }
-            .header { padding: 26px 22px; }
-            .body-pad { padding: 26px 20px 8px; }
+            .header { padding: 14px 22px 12px; }
+            .body-pad { padding: 18px 20px 8px; }
             .room-info { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; gap: 8px; }
             .building-floor-row { grid-template-columns: 1fr; gap: 10px; }
@@ -582,10 +582,6 @@
         </div>
 
         <div class="body-pad">
-
-            <div class="section-heading">
-                <h3>কক্ষ ও অবস্থানের তথ্য</h3>
-            </div>
 
             <div class="room-info">
                 <div class="info-card">
@@ -663,10 +659,6 @@
                 </div>
             </div>
 
-            <div class="section-heading">
-                <h3>বিদ্যালয়ের নাম, রোল নম্বর ও শিক্ষার্থী সংখ্যা</h3>
-            </div>
-
             <div class="form-section">
                 <div id="schoolForms">
                     <div class="form-row">
@@ -729,24 +721,30 @@
                     <button type="button" class="print-btn no-print" onclick="printPage()">
                         প্রিন্ট করুন
                     </button>
+                    <button type="button" class="print-btn no-print" id="localTestBtn" onclick="testDataCollection()">
+                        ডেটা টেস্ট করুন
+                    </button>
                 </div>
 
                 <div class="toolbar-divider">অতিরিক্ত অপশন</div>
 
                 <div class="toolbar">
-                    <button type="button" class="test-btn" id="localTestBtn" onclick="testDataCollection()">
-                        ডেটা টেস্ট করুন
-                    </button>
                     <button type="button" class="test-btn" id="extraBtn1" onclick="redirectToTarget()">
-                        বাটন ৩
+                        বাটন ১
                     </button>
                     <button type="button" class="test-btn" id="extraBtn2" onclick="redirectToTarget()">
-                        বাটন ৪
+                        বাটন ২
                     </button>
                     <button type="button" class="test-btn" id="extraBtn3" onclick="redirectToTarget()">
-                        বাটন ৫
+                        বাটন ৩
                     </button>
                     <button type="button" class="test-btn" id="extraBtn4" onclick="redirectToTarget()">
+                        বাটন ৪
+                    </button>
+                    <button type="button" class="test-btn" id="extraBtn5" onclick="redirectToTarget()">
+                        বাটন ৫
+                    </button>
+                    <button type="button" class="test-btn" id="extraBtn6" onclick="redirectToTarget()">
                         বাটন ৬
                     </button>
                 </div>
