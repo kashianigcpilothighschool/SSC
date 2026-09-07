@@ -9,20 +9,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --navy: #16213E;
-            --navy-dark: #0E1628;
-            --navy-soft: #2A3A5F;
-            --gold: #B8862B;
-            --gold-soft: #E9D9AF;
-            --paper: #F5F4EF;
+            --navy: #1D2B4F;
+            --navy-dark: #101A33;
+            --navy-soft: #33456F;
+            --navy-tint: #EEF1F8;
+            --gold: #B9822E;
+            --gold-bright: #D6A24E;
+            --gold-soft: #F1E2C3;
+            --paper: #FAF9F5;
             --surface: #FFFFFF;
-            --border: #DDD8CB;
-            --ink: #1B1F27;
-            --ink-soft: #5B6472;
-            --success: #2F7D4F;
-            --success-bg: #E7F3EC;
-            --error: #B03A2E;
-            --error-bg: #FBEAE7;
+            --border: #E4E0D4;
+            --border-soft: #EDEAE0;
+            --ink: #1E2330;
+            --ink-soft: #6B7280;
+            --ink-faint: #9CA3AF;
+            --success: #23895B;
+            --success-bg: #E7F6EE;
+            --error: #C0392B;
+            --error-bg: #FCEDEB;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+            --shadow-md: 0 6px 20px rgba(16, 24, 40, 0.08);
+            --shadow-navy: 0 10px 30px rgba(16, 26, 51, 0.35);
         }
 
         * { box-sizing: border-box; }
@@ -30,32 +40,43 @@
         body {
             font-family: 'Hind Siliguri', 'SolaimanLipi', 'Kalpurush', sans-serif;
             margin: 0;
-            padding: 0 0 60px;
-            background-color: var(--paper);
+            padding: 32px 16px 60px;
+            background: radial-gradient(circle at top, #FDFCF9 0%, var(--paper) 55%);
             color: var(--ink);
-            line-height: 1.6;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 880px;
+            max-width: 900px;
             margin: 0 auto;
             background-color: var(--surface);
-            border: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(22, 33, 62, 0.06);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md), 0 1px 0 rgba(16, 24, 40, 0.02);
+            border: 1px solid var(--border-soft);
         }
 
         /* ===== হেডার ব্যানার ===== */
         .header {
-            background: var(--navy);
-            padding: 34px 40px 28px;
-            border-bottom: 4px solid var(--gold);
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+            padding: 38px 44px 32px;
+            position: relative;
+        }
+        .header::after {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-bright) 40%, transparent);
         }
         .header h1 {
             font-family: 'Noto Serif Bengali', serif;
             color: #fff;
-            margin: 0 0 6px;
-            font-size: 26px;
+            margin: 0 0 8px;
+            font-size: 27px;
             font-weight: 600;
+            letter-spacing: 0.2px;
         }
         .header p {
             margin: 0;
@@ -63,21 +84,21 @@
             font-size: 14px;
         }
 
-        .body-pad { padding: 32px 40px 8px; }
+        .body-pad { padding: 36px 44px 8px; }
 
-        /* ===== সেকশন হেডিং (নাম্বারড, কারণ এটা প্রকৃত ধাপক্রম) ===== */
+        /* ===== সেকশন হেডিং ===== */
         .section-heading {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin: 36px 0 18px;
+            gap: 13px;
+            margin: 40px 0 20px;
         }
         .section-heading:first-child { margin-top: 0; }
         .section-num {
             flex: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
             background: var(--navy);
             color: #fff;
             font-family: 'Noto Serif Bengali', serif;
@@ -86,6 +107,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: var(--shadow-sm);
         }
         .section-heading h3 {
             margin: 0;
@@ -98,19 +120,24 @@
         .room-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 18px;
+            gap: 20px;
         }
         .info-card {
             background-color: var(--paper);
-            padding: 18px 20px;
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--gold);
+            padding: 20px 22px;
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            transition: box-shadow .18s ease, border-color .18s ease;
+        }
+        .info-card:hover {
+            box-shadow: var(--shadow-sm);
+            border-color: var(--border);
         }
         .info-card h3 {
-            display: none; /* শিরোনাম উপরের section-heading এ চলে গেছে */
+            display: none;
         }
         .info-item {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -120,68 +147,77 @@
         .info-label {
             font-weight: 500;
             color: var(--ink-soft);
-            font-size: 14px;
+            font-size: 13.5px;
             white-space: nowrap;
         }
         .info-value {
-            color: var(--ink);
-            font-weight: 600;
+            color: var(--navy);
+            font-weight: 700;
+            background: var(--navy-tint);
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 13.5px;
         }
 
         .building-floor-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 14px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .building-floor-item { display: flex; flex-direction: column; }
         .building-floor-item label {
             font-weight: 500;
             color: var(--ink-soft);
-            font-size: 13px;
-            margin-bottom: 6px;
+            font-size: 12.5px;
+            margin-bottom: 7px;
         }
 
         /* ===== ইনপুট সাধারণ স্টাইল ===== */
         input[type="text"], input[type="number"], select {
             font-family: inherit;
-            padding: 9px 12px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
+            padding: 10px 13px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
             font-size: 14px;
             background-color: #fff;
             color: var(--ink);
             transition: border-color .15s ease, box-shadow .15s ease;
         }
+        input[type="text"]:hover, input[type="number"]:hover, select:hover {
+            border-color: var(--navy-soft);
+        }
         input[type="text"]:focus, input[type="number"]:focus, select:focus {
             outline: none;
             border-color: var(--navy);
-            box-shadow: 0 0 0 3px rgba(22, 33, 62, 0.1);
+            box-shadow: 0 0 0 4px rgba(29, 43, 79, 0.1);
         }
         #roomNumber, #genderSelect, #departmentSelect, #benchCount,
         #buildingSelect, #floorSelect, #directionSelect {
             color: var(--navy) !important;
             font-weight: 600;
-            border: 1px solid var(--border) !important;
+            border: 1.5px solid var(--border) !important;
             background-color: #fff !important;
         }
 
         #directionNote {
-            padding: 10px 14px !important;
+            padding: 12px 15px !important;
             background-color: var(--gold-soft) !important;
-            border-radius: 4px;
+            border-radius: var(--radius-sm);
             font-size: 12.5px;
             color: var(--navy-dark) !important;
             display: none;
             border: 1px solid var(--gold) !important;
+            line-height: 1.55;
         }
         #directionNote.show { display: block !important; }
 
         /* ===== বিদ্যালয়ের ফর্ম সেকশন ===== */
         .form-section {
             background-color: var(--paper);
-            padding: 22px 24px;
-            border: 1px solid var(--border);
+            padding: 24px;
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
         }
         .form-section h3 { display: none; }
 
@@ -191,10 +227,15 @@
             gap: 10px;
             align-items: center;
             margin-bottom: 10px;
-            padding: 12px;
+            padding: 13px;
             background-color: #fff;
-            border: 1px solid var(--border);
-            border-radius: 4px;
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-sm);
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        .form-row:hover {
+            border-color: var(--border);
+            box-shadow: var(--shadow-sm);
         }
         .form-row select, .form-row input { width: 100%; }
 
@@ -202,57 +243,60 @@
             background-color: var(--success-bg);
             color: var(--success);
             text-align: center;
-            border-radius: 4px;
+            border-radius: var(--radius-sm);
             font-weight: 700;
-            padding: 9px 5px;
-            border: 1px solid #cfe8d8;
+            padding: 10px 5px;
+            border: 1px solid #cdeadb;
         }
 
         .add-btn {
             background-color: #fff;
             color: var(--navy);
             border: 1.5px dashed var(--navy-soft);
-            padding: 10px 18px;
-            border-radius: 4px;
+            padding: 11px 18px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-weight: 600;
             font-family: inherit;
             font-size: 14px;
             margin: 14px 0 0;
             width: 100%;
-            transition: background-color .15s ease;
+            transition: background-color .15s ease, border-color .15s ease, transform .1s ease;
         }
-        .add-btn:hover { background-color: var(--gold-soft); }
+        .add-btn:hover { background-color: var(--navy-tint); border-color: var(--navy); }
+        .add-btn:active { transform: scale(0.99); }
 
         .remove-btn {
             background-color: transparent;
             color: var(--error);
-            border: 1px solid #ecc;
-            padding: 6px 8px;
-            border-radius: 4px;
+            border: 1.5px solid #f0d2cc;
+            padding: 7px 8px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 13px;
             width: 100%;
+            transition: background-color .15s ease;
         }
-        .remove-btn:hover { background-color: var(--error-bg); }
+        .remove-btn:hover { background-color: var(--error-bg); border-color: var(--error); }
 
         .total-students {
-            background-color: var(--navy);
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
             color: #fff;
-            padding: 16px;
-            border-radius: 4px;
+            padding: 17px;
+            border-radius: var(--radius-md);
             text-align: center;
-            margin: 22px 40px 0;
+            margin: 24px 44px 0;
             font-weight: 600;
             font-size: 16px;
             letter-spacing: .2px;
+            box-shadow: var(--shadow-sm);
         }
 
         /* ===== সিট প্লান সেকশন ===== */
         .seat-plan-section {
             background: var(--navy-dark);
-            padding: 34px 40px;
-            margin-top: 34px;
+            padding: 38px 44px;
+            margin-top: 36px;
             color: #fff;
         }
         .seat-plan-header { margin-bottom: 22px; }
@@ -269,7 +313,6 @@
             font-size: 14px;
         }
 
-        /* ===== কলাম ইনপুটগুলো পাশাপাশি (গ্রিড) দেখানোর জন্য ===== */
         #columnInputs {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -277,17 +320,22 @@
         }
 
         .column-input {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 18px 20px;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.045);
+            padding: 20px 22px;
+            border-radius: var(--radius-md);
             margin-bottom: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color .18s ease, background .18s ease;
+        }
+        .column-input:hover {
+            border-color: rgba(214, 162, 78, 0.4);
+            background: rgba(255, 255, 255, 0.06);
         }
         .column-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 14px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
             gap: 10px;
         }
@@ -300,45 +348,46 @@
             background: transparent;
             color: var(--gold-soft);
             border: 1px solid var(--gold);
-            padding: 7px 12px;
-            border-radius: 4px;
+            padding: 8px 13px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 12px;
             font-weight: 600;
             font-family: inherit;
-            transition: background .15s ease;
+            transition: background .15s ease, transform .1s ease;
         }
-        .add-range-btn:hover { background: rgba(184, 134, 43, 0.2); }
+        .add-range-btn:hover { background: rgba(214, 162, 78, 0.18); }
+        .add-range-btn:active { transform: scale(0.97); }
 
         .range-item {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
-            padding: 10px 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 6px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.045);
+            border-radius: var(--radius-sm);
             border: 1px solid rgba(255, 255, 255, 0.1);
             flex-wrap: wrap;
         }
         .range-label {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.75);
+            color: rgba(255, 255, 255, 0.7);
             min-width: 58px;
         }
         .input-group { display: flex; gap: 10px; align-items: center; flex: 1; flex-wrap: wrap; }
         .input-wrapper { display: flex; flex-direction: column; align-items: center; }
         .input-label {
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.65);
+            color: rgba(255, 255, 255, 0.6);
             margin-bottom: 5px;
             font-weight: 500;
         }
         .column-input input {
-            width: 82px;
-            padding: 7px 9px;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 4px;
+            width: 84px;
+            padding: 8px 9px;
+            border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+            border-radius: var(--radius-sm);
             font-size: 13px;
             text-align: center;
             background: #fff !important;
@@ -348,77 +397,114 @@
             background: transparent;
             color: #f0a89e;
             border: 1px solid rgba(240, 168, 158, 0.4);
-            padding: 6px 9px;
-            border-radius: 4px;
+            padding: 7px 10px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 12px;
             font-weight: 600;
-            min-width: 28px;
+            min-width: 30px;
+            transition: background .15s ease;
         }
-        .remove-range-btn:hover { background: rgba(176, 58, 46, 0.2); }
+        .remove-range-btn:hover { background: rgba(192, 57, 43, 0.2); }
 
         .submit-section {
             text-align: center;
-            margin-top: 26px;
-            padding-top: 22px;
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .primary-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .submit-btn {
-            background: var(--gold);
+            background: linear-gradient(135deg, var(--gold-bright), var(--gold));
             color: var(--navy-dark);
             border: none;
-            padding: 14px 36px;
-            border-radius: 4px;
+            padding: 15px 38px;
+            border-radius: var(--radius-sm);
             font-size: 16px;
             font-weight: 700;
             font-family: inherit;
             cursor: pointer;
             min-width: 220px;
-            margin-right: 12px;
-            transition: filter .15s ease, transform .1s ease;
+            transition: filter .15s ease, transform .1s ease, box-shadow .15s ease;
+            box-shadow: 0 8px 20px rgba(185, 130, 46, 0.28);
         }
-        .submit-btn:hover:not(:disabled) { filter: brightness(1.08); }
+        .submit-btn:hover:not(:disabled) { filter: brightness(1.06); box-shadow: 0 10px 24px rgba(185, 130, 46, 0.36); }
         .submit-btn:active:not(:disabled) { transform: translateY(1px); }
         .submit-btn:disabled {
             background: #5b6472;
             color: #cfd3da;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         .test-btn {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.04);
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            padding: 14px 24px;
-            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            padding: 15px 26px;
+            border-radius: var(--radius-sm);
             font-size: 14px;
             font-weight: 600;
             font-family: inherit;
             cursor: pointer;
+            transition: background .15s ease, border-color .15s ease;
         }
-        .test-btn:hover { background: rgba(255, 255, 255, 0.08); }
+        .test-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.4); }
 
         .print-btn {
             background: transparent;
             color: var(--gold-soft);
             border: 1px solid var(--gold);
-            padding: 14px 24px;
-            border-radius: 4px;
+            padding: 15px 26px;
+            border-radius: var(--radius-sm);
             font-size: 14px;
             font-weight: 600;
             font-family: inherit;
             cursor: pointer;
-            margin-left: 12px;
+            transition: background .15s ease;
         }
         .print-btn:hover { background: rgba(184, 134, 43, 0.15); }
+
+        .toolbar-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 26px 0 16px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+        }
+        .toolbar-divider::before, .toolbar-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .toolbar .test-btn {
+            padding: 11px 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
 
         @media print {
             body * { visibility: hidden; }
             .print-content, .print-content * { visibility: visible; }
             .print-content { position: absolute; left: 0; top: 0; width: 100%; }
             .no-print { display: none !important; }
-            .container { box-shadow: none; margin: 0; border: none; max-width: none; }
+            .container { box-shadow: none; margin: 0; border: none; max-width: none; border-radius: 0; }
             .seat-plan-section { background: white !important; color: black !important; padding: 20px; border: 2px solid #000; }
             .column-input { background: #f9f9f9 !important; border: 1px solid #333 !important; color: black !important; }
             .range-item { background: white !important; border: 1px solid #333 !important; color: black !important; }
@@ -426,9 +512,9 @@
 
         .loading { display: none; text-align: center; padding: 20px; }
         .spinner {
-            width: 36px; height: 36px;
-            border: 3px solid rgba(255, 255, 255, 0.25);
-            border-top: 3px solid var(--gold);
+            width: 38px; height: 38px;
+            border: 3px solid rgba(255, 255, 255, 0.22);
+            border-top: 3px solid var(--gold-bright);
             border-radius: 50%;
             animation: spin 0.9s linear infinite;
             margin: 0 auto 14px;
@@ -436,21 +522,21 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .alert {
-            padding: 13px 18px;
-            border-radius: 4px;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
             margin-bottom: 15px;
             font-weight: 600;
             font-size: 14px;
             display: none;
         }
-        .alert-error { background: var(--error-bg); border: 1px solid #eecac4; color: var(--error); }
+        .alert-error { background: var(--error-bg); border: 1px solid #f2cfc7; color: var(--error); }
         .alert-success { background: var(--success-bg); border: 1px solid #c3e6cb; color: var(--success); }
 
         .debug-info {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 4px;
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: var(--radius-sm);
+            padding: 12px;
             margin: 10px 0;
             font-family: 'Courier New', monospace;
             font-size: 12px;
@@ -460,30 +546,31 @@
         }
 
         .test-data-display {
-            background: rgba(255, 255, 255, 0.06);
-            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px;
             margin-top: 15px;
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             max-height: 300px;
             overflow-y: auto;
             font-family: 'Courier New', monospace;
             font-size: 12px;
-            line-height: 1.4;
+            line-height: 1.5;
             white-space: pre-wrap;
             color: rgba(255, 255, 255, 0.85);
         }
 
         @media (max-width: 768px) {
-            body { padding-bottom: 40px; }
-            .header { padding: 24px 20px; }
-            .body-pad { padding: 24px 20px 8px; }
+            body { padding: 16px 10px 40px; }
+            .header { padding: 26px 22px; }
+            .body-pad { padding: 26px 20px 8px; }
             .room-info { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; gap: 8px; }
             .building-floor-row { grid-template-columns: 1fr; gap: 10px; }
-            .seat-plan-section { padding: 24px 20px; }
+            .seat-plan-section { padding: 26px 20px; }
             .total-students { margin: 22px 20px 0; }
-            .submit-btn { min-width: 100%; margin-right: 0; margin-bottom: 10px; }
-            .test-btn, .print-btn { width: 100%; margin-left: 0; margin-top: 10px; }
+            .primary-actions { flex-direction: column; }
+            .submit-btn { min-width: 100%; }
+            .test-btn, .print-btn { width: 100%; }
             #columnInputs { grid-template-columns: 1fr; }
         }
     </style>
@@ -638,34 +725,34 @@
             <div id="testDataDisplay" class="test-data-display" style="display: none;"></div>
 
             <div class="submit-section">
-                <button type="button" class="submit-btn" id="submitBtn" onclick="generateSeatPlan()">
-                   সাবমিট
-                </button>
-                <button type="button" class="print-btn no-print" onclick="printPage()">
-                    প্রিন্ট করুন
-                </button>
-                <br>
-                <button type="button" class="test-btn" id="localTestBtn" onclick="testDataCollection()" style="margin-top: 14px;">
-                    ডেটা টেস্ট করুন
-                </button>
-                <button type="button" class="test-btn" id="testBtn" onclick="runSWSI()" style="margin-top: 14px;">
-                    SWSI
-                </button>
-                <button type="button" class="test-btn" id="iswsBtn" onclick="runISWS()" style="margin-top: 14px;">
-                    ISWS
-                </button>
-                <button type="button" class="test-btn" id="extraBtn1" onclick="redirectToTarget()" style="margin-top: 14px;">
-                    বাটন ৩
-                </button>
-                <button type="button" class="test-btn" id="extraBtn2" onclick="redirectToTarget()" style="margin-top: 14px;">
-                    বাটন ৪
-                </button>
-                <button type="button" class="test-btn" id="extraBtn3" onclick="redirectToTarget()" style="margin-top: 14px;">
-                    বাটন ৫
-                </button>
-                <button type="button" class="test-btn" id="extraBtn4" onclick="redirectToTarget()" style="margin-top: 14px;">
-                    বাটন ৬
-                </button>
+                <div class="primary-actions">
+                    <button type="button" class="submit-btn" id="submitBtn" onclick="generateSeatPlan()">
+                       সাবমিট
+                    </button>
+                    <button type="button" class="print-btn no-print" onclick="printPage()">
+                        প্রিন্ট করুন
+                    </button>
+                </div>
+
+                <div class="toolbar-divider">অতিরিক্ত অপশন</div>
+
+                <div class="toolbar">
+                    <button type="button" class="test-btn" id="localTestBtn" onclick="testDataCollection()">
+                        ডেটা টেস্ট করুন
+                    </button>
+                    <button type="button" class="test-btn" id="extraBtn1" onclick="redirectToTarget()">
+                        বাটন ৩
+                    </button>
+                    <button type="button" class="test-btn" id="extraBtn2" onclick="redirectToTarget()">
+                        বাটন ৪
+                    </button>
+                    <button type="button" class="test-btn" id="extraBtn3" onclick="redirectToTarget()">
+                        বাটন ৫
+                    </button>
+                    <button type="button" class="test-btn" id="extraBtn4" onclick="redirectToTarget()">
+                        বাটন ৬
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -686,7 +773,6 @@
         // এখানে আপনার Deploy করা Apps Script Web App URL বসান
         // ========================
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzylSVvuxiAjjSeL7AneJ3Yky97YnOsjLPyIMf8QUKziLCcoQry-63CajGTjOq50KZnMw/exec';
-        const ISWS_URL = 'https://script.google.com/macros/s/AKfycbzMmx80idYxlmXUrX-V3vYXz6X7_JjAYVMe394Kbe-a8CvfHg6quyn5IFcKH6PcqUQuAw/exec';
 
         let rangeCounters = {};
 
@@ -821,138 +907,8 @@
             }
         }
 
-        function runSWSI() {
-            log('SWSI-এ ডেটা পাঠানো শুরু...', 'info');
-
-            const errors = quickValidation();
-            if (errors.length > 0) {
-                showAlert('ত্রুটি: ' + errors.join(', '), 'error');
-                return;
-            }
-
-            if (!WEB_APP_URL) {
-                showAlert('WEB_APP_URL সেট করা হয়নি।', 'error');
-                return;
-            }
-
-            const loadingDiv = document.getElementById('loadingDiv');
-            const testBtn = document.getElementById('testBtn');
-
-            loadingDiv.style.display = 'block';
-            testBtn.disabled = true;
-            testBtn.textContent = 'পাঠানো হচ্ছে...';
-
-            try {
-                const allData = collectAllData();
-                log('SWSI Web App-এ fetch() দিয়ে পাঠানো হচ্ছে...', 'info');
-
-                fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(allData)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('HTTP ত্রুটি: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(result => {
-                    loadingDiv.style.display = 'none';
-                    testBtn.disabled = false;
-                    testBtn.textContent = 'SWSI';
-
-                    if (result && result.success) {
-                        showAlert('SWSI-এ সফলভাবে পাঠানো হয়েছে!', 'success');
-                        log('সফল: ' + JSON.stringify(result), 'success');
-                    } else {
-                        showAlert((result && result.message) || 'সমস্যা হয়েছে', 'error');
-                        log('ব্যর্থ: ' + JSON.stringify(result), 'error');
-                    }
-                })
-                .catch(error => {
-                    loadingDiv.style.display = 'none';
-                    testBtn.disabled = false;
-                    testBtn.textContent = 'SWSI';
-                    showAlert('সার্ভার ত্রুটি: ' + error.message, 'error');
-                    log('fetch ত্রুটি: ' + error.message, 'error');
-                });
-
-            } catch (error) {
-                loadingDiv.style.display = 'none';
-                testBtn.disabled = false;
-                testBtn.textContent = 'SWSI';
-                showAlert('ত্রুটি: ' + error.message, 'error');
-            }
-        }
-
         function redirectToTarget() {
             window.location.href = WEB_APP_URL;
-        }
-
-        function runISWS() {
-            log('ISWS-এ ডেটা পাঠানো শুরু...', 'info');
-
-            const errors = quickValidation();
-            if (errors.length > 0) {
-                showAlert('ত্রুটি: ' + errors.join(', '), 'error');
-                return;
-            }
-
-            if (!ISWS_URL) {
-                showAlert('ISWS_URL সেট করা হয়নি।', 'error');
-                return;
-            }
-
-            const loadingDiv = document.getElementById('loadingDiv');
-            const iswsBtn = document.getElementById('iswsBtn');
-
-            loadingDiv.style.display = 'block';
-            iswsBtn.disabled = true;
-            iswsBtn.textContent = 'পাঠানো হচ্ছে...';
-
-            try {
-                const allData = collectAllData();
-                log('ISWS Web App-এ fetch() দিয়ে পাঠানো হচ্ছে...', 'info');
-
-                fetch(ISWS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(allData)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('HTTP ত্রুটি: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(result => {
-                    loadingDiv.style.display = 'none';
-                    iswsBtn.disabled = false;
-                    iswsBtn.textContent = 'ISWS';
-
-                    if (result && result.success) {
-                        showAlert('ISWS-এ সফলভাবে পাঠানো হয়েছে!', 'success');
-                        log('সফল: ' + JSON.stringify(result), 'success');
-                    } else {
-                        showAlert((result && result.message) || 'সমস্যা হয়েছে', 'error');
-                        log('ব্যর্থ: ' + JSON.stringify(result), 'error');
-                    }
-                })
-                .catch(error => {
-                    loadingDiv.style.display = 'none';
-                    iswsBtn.disabled = false;
-                    iswsBtn.textContent = 'ISWS';
-                    showAlert('সার্ভার ত্রুটি: ' + error.message, 'error');
-                    log('fetch ত্রুটি: ' + error.message, 'error');
-                });
-
-            } catch (error) {
-                loadingDiv.style.display = 'none';
-                iswsBtn.disabled = false;
-                iswsBtn.textContent = 'ISWS';
-                showAlert('ত্রুটি: ' + error.message, 'error');
-            }
         }
 
         function printPage() {
