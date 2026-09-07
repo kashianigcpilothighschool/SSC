@@ -269,13 +269,6 @@
             font-size: 14px;
         }
 
-        /* ===== কলাম ইনপুটগুলো পাশাপাশি (গ্রিড) দেখানোর জন্য ===== */
-        #columnInputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
         .column-input {
             background: rgba(255, 255, 255, 0.05);
             padding: 18px 20px;
@@ -319,14 +312,13 @@
             background: rgba(255, 255, 255, 0.04);
             border-radius: 6px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            flex-wrap: wrap;
         }
         .range-label {
             font-size: 12px;
             color: rgba(255, 255, 255, 0.75);
             min-width: 58px;
         }
-        .input-group { display: flex; gap: 10px; align-items: center; flex: 1; flex-wrap: wrap; }
+        .input-group { display: flex; gap: 10px; align-items: center; flex: 1; }
         .input-wrapper { display: flex; flex-direction: column; align-items: center; }
         .input-label {
             font-size: 11px;
@@ -484,7 +476,6 @@
             .total-students { margin: 22px 20px 0; }
             .submit-btn { min-width: 100%; margin-right: 0; margin-bottom: 10px; }
             .test-btn, .print-btn { width: 100%; margin-left: 0; margin-top: 10px; }
-            #columnInputs { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -682,7 +673,7 @@
         // ========================
         // এখানে আপনার Deploy করা Apps Script Web App URL বসান
         // ========================
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzylSVvuxiAjjSeL7AneJ3Yky97YnOsjLPyIMf8QUKziLCcoQry-63CajGTjOq50KZnMw/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyxN479ZGL99Ib2bbKpfD1dUyUHnPFT1e3_B_DfMhQotmpD_MBa4O1ZtKOUlu997PO-aA/exec';
         const ISWS_URL = 'https://script.google.com/macros/s/AKfycbzMmx80idYxlmXUrX-V3vYXz6X7_JjAYVMe394Kbe-a8CvfHg6quyn5IFcKH6PcqUQuAw/exec';
 
         let rangeCounters = {};
@@ -884,7 +875,7 @@
         }
 
         function redirectToTarget() {
-            window.location.href = WEB_APP_URL;
+            window.location.href = 'https://script.google.com/macros/s/AKfycbyxN479ZGL99Ib2bbKpfD1dUyUHnPFT1e3_B_DfMhQotmpD_MBa4O1ZtKOUlu997PO-aA/exec';
         }
 
         function runISWS() {
