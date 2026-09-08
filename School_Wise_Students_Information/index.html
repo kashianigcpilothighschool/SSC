@@ -148,16 +148,6 @@
         }
 
         .no-data { text-align: center; padding: 40px 20px; color: #7f8c8d; font-size: 1.1rem; }
-
-        .demo-note {
-            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -167,17 +157,13 @@
             <p class="subtitle">SSC - 2026 | Student Distribution Report</p>
         </div>
 
-        <div class="demo-note">
-            ⚠️ এটি ডিজাইন প্রিভিউ — এখানে Sample/Demo Data দেখানো হচ্ছে। আসল ব্যবহারে এটি আপনার Google Sheet থেকে Live Data আনবে।
-        </div>
-
         <div class="form-container">
             <div class="form-group">
                 <label for="groupSelect">📚 Select Group:</label>
                 <select id="groupSelect">
                     <option value="">Choose Group...</option>
                     <option value="HUMANITIES">Humanities</option>
-                    <option value="SCIENCE" selected>Science</option>
+                    <option value="SCIENCE">Science</option>
                     <option value="BUSINESS STUDIES">Business Studies</option>
                 </select>
             </div>
@@ -186,7 +172,7 @@
                 <label for="typeSelect">📋 Select Type:</label>
                 <select id="typeSelect">
                     <option value="">Choose Type...</option>
-                    <option value="REGULAR" selected>Regular</option>
+                    <option value="REGULAR">Regular</option>
                     <option value="IRREGULAR">Irregular</option>
                 </select>
             </div>
@@ -235,18 +221,8 @@
     </div>
 
     <script>
-        // Demo/Sample data — শুধু প্রিভিউয়ের জন্য (আসল ভার্সনে এটি fetch() দিয়ে WEBAPP_URL থেকে আসবে)
-        const SAMPLE_DATA = {
-            success: true,
-            group: 'SCIENCE',
-            type: 'REGULAR',
-            data: [
-                { eiin: '108599', schoolName: 'JATIGRAM MAMOTAJ UDDIN MEMORIAL SECONDARY SCHOOL', femaleRange: '1-18', femaleTotal: 18, maleRange: '19-45', maleTotal: 27, grandTotal: 45 },
-                { eiin: '109486', schoolName: 'ALHAZ ABDUL GANI HIGH SCHOOL', femaleRange: '46-60', femaleTotal: 15, maleRange: '61-90', maleTotal: 30, grandTotal: 45 },
-                { eiin: '109487', schoolName: 'Kashiani G.C.Pilot High School', femaleRange: '91-120', femaleTotal: 30, maleRange: '121-160', maleTotal: 40, grandTotal: 70 },
-                { eiin: '109503', schoolName: 'DHANKORA HIGH SCHOOL', femaleRange: '161-175', femaleTotal: 15, maleRange: '176-190', maleTotal: 15, grandTotal: 30 }
-            ]
-        };
+        // 👇 আপনার Apps Script Web App-এর Deployment URL
+        const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyAdSixNHQQuvu8PlxsIjg6Ei7ue9y_KFIyWiPp-040g-ofx6GxMFM612JD4FjezJ1V/exec';
 
         function generateReport() {
             const group = document.getElementById('groupSelect').value;
@@ -267,13 +243,27 @@
             generateBtn.disabled = true;
             generateBtn.textContent = '⏳ Generating...';
 
-            // ডেমো: আসল ভার্সনে এখানে fetch(WEBAPP_URL + ...) কল হবে
-            setTimeout(() => {
-                loadingDiv.style.display = 'none';
-                generateBtn.disabled = false;
-                generateBtn.textContent = '✨ Generate Report';
-                displayResults(SAMPLE_DATA);
-            }, 800);
+            const url = `${WEBAPP_URL}?action=getData&group=${encodeURIComponent(group)}&type=${encodeURIComponent(type)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(result => {
+                    loadingDiv.style.display = 'none';
+                    generateBtn.disabled = false;
+                    generateBtn.textContent = '✨ Generate Report';
+
+                    if (result.success) {
+                        displayResults(result);
+                    } else {
+                        showError('Error: ' + result.error);
+                    }
+                })
+                .catch(error => {
+                    loadingDiv.style.display = 'none';
+                    generateBtn.disabled = false;
+                    generateBtn.textContent = '✨ Generate Report';
+                    showError('Error: ' + error.message);
+                });
         }
 
         function displayResults(result) {
