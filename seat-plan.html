@@ -729,22 +729,22 @@
                 <div class="toolbar-divider">অতিরিক্ত অপশন</div>
 
                 <div class="toolbar">
-                    <button type="button" class="test-btn" id="extraBtn1" onclick="redirectToTarget()">
+                    <button type="button" class="test-btn" id="extraBtn1" onclick="redirectToButton('swsi')">
                         SWSI
                     </button>
-                    <button type="button" class="test-btn" id="extraBtn2" onclick="redirectToTarget()">
+                    <button type="button" class="test-btn" id="extraBtn2" onclick="redirectToButton('btn2')">
                         বাটন ২
                     </button>
-                    <button type="button" class="test-btn" id="extraBtn3" onclick="redirectToTarget()">
+                    <button type="button" class="test-btn" id="extraBtn3" onclick="redirectToButton('btn3')">
                         বাটন ৩
                     </button>
-                    <button type="button" class="test-btn" id="extraBtn4" onclick="redirectToTarget()">
+                    <button type="button" class="test-btn" id="extraBtn4" onclick="redirectToButton('btn4')">
                         বাটন ৪
                     </button>
-                    <button type="button" class="test-btn" id="extraBtn5" onclick="redirectToTarget()">
+                    <button type="button" class="test-btn" id="extraBtn5" onclick="redirectToButton('btn5')">
                         বাটন ৫
                     </button>
-                    <button type="button" class="test-btn" id="extraBtn6" onclick="redirectToTarget()">
+                    <button type="button" class="test-btn" id="extraBtn6" onclick="redirectToButton('btn6')">
                         বাটন ৬
                     </button>
                 </div>
@@ -768,6 +768,18 @@
         // এখানে আপনার Deploy করা Apps Script Web App URL বসান
         // ========================
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzylSVvuxiAjjSeL7AneJ3Yky97YnOsjLPyIMf8QUKziLCcoQry-63CajGTjOq50KZnMw/exec';
+
+        // ========================
+        // প্রতিটি টুলবার বাটনের জন্য আলাদা URL (এখানে পরিবর্তন করুন)
+        // ========================
+        const BUTTON_URLS = {
+            swsi:   'https://ssc-phi-seven.vercel.app/School_Wise_Students_Information',
+            btn2:   'https://example.com/button-2-link',
+            btn3:   'https://example.com/button-3-link',
+            btn4:   'https://example.com/button-4-link',
+            btn5:   'https://example.com/button-5-link',
+            btn6:   'https://example.com/button-6-link'
+        };
 
         let rangeCounters = {};
 
@@ -902,8 +914,24 @@
             }
         }
 
-        function redirectToTarget() {
-            window.location.href = WEB_APP_URL;
+        function redirectToButton(key) {
+            const targetUrl = BUTTON_URLS[key];
+
+            if (!targetUrl || targetUrl.indexOf('example.com') !== -1) {
+                showAlert('এই বাটনের জন্য URL এখনো সেট করা হয়নি!', 'error');
+                log(`URL সেট করা নেই: ${key}`, 'error');
+                return;
+            }
+
+            log(`প্রিন্ট করে ${key} পেজে যাওয়া হচ্ছে: ${targetUrl}`, 'info');
+
+            // প্রথমে প্রিন্ট ডায়ালগ চালু করা হচ্ছে
+            printPage();
+
+            // প্রিন্ট ডায়ালগ বন্ধ হওয়ার পর নতুন ট্যাবে টার্গেট পেজ খোলা হবে
+            setTimeout(() => {
+                window.open(targetUrl, '_blank');
+            }, 800);
         }
 
         function printPage() {
