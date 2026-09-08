@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Information of Subject wise students (ISWS)</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+      }
+
+      .card {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,.05);
+        margin-bottom: 20px;
+      }
+
+      .card-header {
+        background: #4a6fdc;
+        color: white;
+        border-radius: 8px 8px 0 0 !important;
+        padding: 15px;
+        font-weight: bold;
+      }
+
+      .form-select, .form-control {
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+      }
+
+      .form-select:focus, .form-control:focus {
+        box-shadow: 0 0 4px rgba(74, 111, 220, 0.4);
+        border-color: #4a6fdc;
+      }
+
+      .btn-primary {
+        background: #4a6fdc;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 16px;
+        font-weight: 600;
+      }
+
+      .btn-primary:hover {
+        background: #3a5ec8;
+      }
+
+      .btn-outline-secondary {
+        border-radius: 6px;
+        padding: 8px 16px;
+        font-weight: 600;
+      }
+
+      .result-card {
+        background: #4a6fdc;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,.05);
+      }
+
+      .result-number {
+        font-size: 3rem;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+
+      .loader {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #4a6fdc;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+        display: none;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .students-section {
+        display: none;
+        margin-top: 20px;
+      }
+
+      .table {
+        background-color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-4">
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="text-center mb-4 header-container">
+            <h1 class="display-5 fw-bold">Information of Subject wise students (ISWS)</h1>
+            <p class="lead text-muted">Search and filter student data based on your criteria</p>
+          </div>
+
+          <!-- Search Form -->
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0"><i class="fas fa-search me-2"></i>Search Filters</h5>
+            </div>
+            <div class="card-body">
+              <form id="searchForm">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="eiin" class="form-label">EIIN</label>
+                    <select class="form-select" id="eiin" name="eiin">
+                      <option value="">All EIIN</option>
+                      <option value="108599">108599</option>
+                      <option value="108600">108600</option>
+                      <option value="109486">109486</option>
+                      <option value="109487">109487</option>
+                      <option value="109488">109488</option>
+                      <option value="109489">109489</option>
+                      <option value="109494">109494</option>
+                      <option value="109497">109497</option>
+                      <option value="109503">109503</option>
+                      <option value="109505">109505</option>
+                      <option value="109508">109508</option>
+                      <option value="109511">109511</option>
+                      <option value="109513">109513</option>
+                      <option value="109522">109522</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="roll" class="form-label">Roll Number</label>
+                    <input type="text" class="form-control" id="roll" name="roll" placeholder="Enter Roll Number">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="session" class="form-label">Session</label>
+                    <input type="text" class="form-control" id="session" name="session" placeholder="Enter Session">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="type" class="form-label">Type</label>
+                    <select class="form-select" id="type" name="type">
+                      <option value="">All Types</option>
+                      <option value="REGULAR">Regular</option>
+                      <option value="IRREGULAR">Irregular</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="group" class="form-label">Group</label>
+                    <select class="form-select" id="group" name="group">
+                      <option value="">All Groups</option>
+                      <option value="HUMANITIES">HUMANITIES</option>
+                      <option value="SCIENCE">SCIENCE</option>
+                      <option value="BUSINESS STUDIES">BUSINESS STUDIES</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select class="form-select" id="gender" name="gender">
+                      <option value="">All Genders</option>
+                      <option value="MALE">Male</option>
+                      <option value="FEMALE">Female</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-12">
+                    <label for="subjectCode" class="form-label">Subject Code</label>
+                    <select class="form-select" id="subjectCode" name="subjectCode">
+                      <option value="">All Subject Codes</option>
+                      <option value="101">101</option>
+                      <option value="102">102</option>
+                      <option value="107">107</option>
+                      <option value="108">108</option>
+                      <option value="109">109</option>
+                      <option value="110">110</option>
+                      <option value="111">111</option>
+                      <option value="112">112</option>
+                      <option value="126">126</option>
+                      <option value="127">127</option>
+                      <option value="134">134</option>
+                      <option value="136">136</option>
+                      <option value="137">137</option>
+                      <option value="138">138</option>
+                      <option value="140">140</option>
+                      <option value="141">141</option>
+                      <option value="143">143</option>
+                      <option value="146">146</option>
+                      <option value="150">150</option>
+                      <option value="151">151</option>
+                      <option value="152">152</option>
+                      <option value="153">153</option>
+                      <option value="154">154</option>
+                    </select>
+                  </div>
+
+                  <div class="col-12 mt-4 text-center">
+                    <button type="submit" class="btn btn-primary px-4">
+                      <i class="fas fa-search me-2"></i>Search
+                    </button>
+                    <button type="button" id="resetBtn" class="btn btn-outline-secondary ms-2 px-4">
+                      <i class="fas fa-redo me-2"></i>Reset
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <div class="loader" id="loader"></div>
+          </div>
+
+          <div class="result-section mt-4" style="display: none;">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="result-card">
+                  <h4><i class="fas fa-filter me-2"></i>Filtered Records</h4>
+                  <p class="result-number" id="filteredCount">0</p>
+                  <p class="mb-0">Based on your search criteria</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="result-card" style="background: #5a7ee0;">
+                  <h4><i class="fas fa-database me-2"></i>Total Records</h4>
+                  <p class="result-number" id="totalCount">0</p>
+                  <p class="mb-0">Stored in database</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="students-section card" id="studentsSection">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0"><i class="fas fa-user-graduate me-2"></i>Students List</h5>
+              <button type="button" class="btn btn-sm btn-light no-print" id="printStudentsBtn">
+                <i class="fas fa-print me-1"></i>Print
+              </button>
+            </div>
+            <div class="card-body">
+              <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Roll</th>
+                    <th scope="col">Session.</th>
+                    <th scope="col">EIIN</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Group</th>
+                    <th scope="col">Type</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="footer">
+            <p>&copy; 2025 | School and Examination Management System (SEMS)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // ==================== CONFIG ====================
+      // এখানে আপনার Apps Script Web App-এর deployment URL বসান
+      // (Deploy > New deployment > Web app করার পর যে URL পাবেন সেটি)
+      const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbx6DSRv_jHg5URM5ofKjIG0zIUotwGsum9iJPrk0LBd-tmhKPNi_4J5e4eFtB6V9RzZqQ/exec';
+      // ==================================================
+
+      let searchResults = [];
+      let searchFilters = {};
+
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          performSearch();
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+          document.getElementById('searchForm').reset();
+          hideResults();
+        });
+
+        document.getElementById('printStudentsBtn').addEventListener('click', function() {
+          openPrintWindow();
+        });
+      });
+
+      function openPrintWindow() {
+        const printWindow = window.open('', '_blank');
+
+        let filterSummary = "Filters: ";
+        const filterTexts = [];
+
+        if (searchFilters.eiin) filterTexts.push("EIIN: " + searchFilters.eiin);
+        if (searchFilters.roll) filterTexts.push("Roll: " + searchFilters.roll);
+        if (searchFilters.session) filterTexts.push("Session: " + searchFilters.session);
+        if (searchFilters.type) filterTexts.push("Type: " + searchFilters.type);
+        if (searchFilters.group) filterTexts.push("Group: " + searchFilters.group);
+        if (searchFilters.gender) filterTexts.push("Gender: " + searchFilters.gender);
+        if (searchFilters.subjectCode) filterTexts.push("Subject Code: " + searchFilters.subjectCode);
+
+        filterSummary += filterTexts.length > 0 ? filterTexts.join(", ") : "None (All records)";
+
+        let printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Student List Report - Print View</title>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            .print-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #ddd; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }
+            th { background-color: #4a6fdc; color: white; }
+            tr:nth-child(even) { background-color: #f2f2f2; }
+            .print-btn { text-align: center; margin: 20px 0; }
+            .print-btn button { padding: 10px 20px; background-color: #4a6fdc; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+            @media print { .print-btn { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div class="print-header">
+            <h2>School and Examination Management System (SEMS)</h2>
+            <h4>Student List Report</h4>
+            <p>${filterSummary}</p>
+          </div>
+          <div class="print-btn"><button onclick="window.print()">Print Report</button></div>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Roll</th><th>Session.</th><th>EIIN</th><th>Gender</th><th>Group</th><th>Type</th></tr>
+            </thead>
+            <tbody>`;
+
+        searchResults.forEach((student, index) => {
+          printContent += `
+              <tr>
+                <td>${index + 1}</td>
+                <td>${student.roll || ''}</td>
+                <td>${student.regNo || ''}</td>
+                <td>${student.eiin || ''}</td>
+                <td>${student.gender || ''}</td>
+                <td>${student.group || ''}</td>
+                <td>${student.type || ''}</td>
+              </tr>`;
+        });
+
+        printContent += `
+            </tbody>
+          </table>
+          <div class="print-btn"><button onclick="window.print()">Print Report</button></div>
+        </body>
+        </html>`;
+
+        printWindow.document.open();
+        printWindow.document.write(printContent);
+        printWindow.document.close();
+        printWindow.focus();
+      }
+
+      // Apps Script API-কে fetch() দিয়ে কল করা (google.script.run এর পরিবর্তে)
+      function performSearch() {
+        showLoader();
+
+        searchFilters = {
+          eiin: document.getElementById('eiin').value,
+          roll: document.getElementById('roll').value,
+          session: document.getElementById('session').value,
+          type: document.getElementById('type').value,
+          group: document.getElementById('group').value,
+          gender: document.getElementById('gender').value,
+          subjectCode: document.getElementById('subjectCode').value
+        };
+
+        const params = new URLSearchParams({ action: 'search', ...searchFilters });
+        const url = WEBAPP_URL + '?' + params.toString();
+
+        fetch(url)
+          .then(res => res.json())
+          .then(response => {
+            if (!response.success) {
+              throw new Error(response.error || 'Unknown error');
+            }
+            handleSearchResults(response);
+          })
+          .catch(handleError);
+      }
+
+      function handleSearchResults(response) {
+        hideLoader();
+        searchResults = response.data;
+
+        document.getElementById('filteredCount').textContent = response.filteredCount;
+        document.getElementById('totalCount').textContent = response.totalCount;
+
+        document.querySelector('.result-section').style.display = 'block';
+
+        populateStudentsTable(searchResults);
+      }
+
+      function populateStudentsTable(students) {
+        const tableBody = document.getElementById('studentsTableBody');
+        tableBody.innerHTML = '';
+
+        if (students.length === 0) {
+          document.getElementById('studentsSection').style.display = 'none';
+          return;
+        }
+
+        students.forEach((student, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${student.roll || ''}</td>
+            <td>${student.regNo || ''}</td>
+            <td>${student.eiin || ''}</td>
+            <td>${student.gender || ''}</td>
+            <td>${student.group || ''}</td>
+            <td>${student.type || ''}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+        document.getElementById('studentsSection').style.display = 'block';
+      }
+
+      function showLoader() {
+        document.getElementById('loader').style.display = 'block';
+      }
+
+      function hideLoader() {
+        document.getElementById('loader').style.display = 'none';
+      }
+
+      function hideResults() {
+        document.querySelector('.result-section').style.display = 'none';
+        document.getElementById('studentsSection').style.display = 'none';
+      }
+
+      function handleError(error) {
+        hideLoader();
+        console.error('Error:', error);
+        alert('An error occurred while processing your request. Please try again.');
+      }
+    </script>
+  </body>
+</html>
