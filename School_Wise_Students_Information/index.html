@@ -4,162 +4,217 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>School Wise Students Information</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --ink: #000000;
+            --text: #1a1a1a;
+            --muted: #555555;
+            --border: #000000;
+            --accent: #14532d;
+            --accent-light: #f0f5f1;
+            --bg: #f2f2f2;
+            --error: #b00000;
+            --error-bg: #fdecec;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            font-family: 'Inter', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 30px 16px;
         }
 
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            max-width: 1200px;
-            width: 100%;
-            backdrop-filter: blur(10px);
+        .sheet {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #999;
+            padding: 30px 36px 40px;
         }
 
-        .header { text-align: center; margin-bottom: 40px; }
-        .header h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 10px; }
-        .subtitle { color: #7f8c8d; font-size: 1.1rem; margin-bottom: 30px; }
+        /* ---------- Header ---------- */
+        .doc-header {
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 14px;
+            margin-bottom: 24px;
+        }
+        .doc-header h1 {
+            font-family: 'Noto Serif', serif;
+            font-weight: 700;
+            font-size: 1.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+        .doc-header .subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin-top: 6px;
+        }
 
-        .form-container {
+        /* ---------- Form / control bar ---------- */
+        .control-bar {
             display: flex;
+            align-items: flex-end;
             gap: 20px;
-            margin-bottom: 30px;
             flex-wrap: wrap;
-            justify-content: center;
-            align-items: end;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ccc;
         }
-
-        .form-group { flex: 1; min-width: 200px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #34495e; font-weight: 600; }
-
-        .form-group select {
+        .field { flex: 1; min-width: 200px; }
+        .field label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .field select {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e1e8ed;
-            border-radius: 12px;
-            font-size: 1rem;
-            background: white;
-            outline: none;
+            padding: 9px 10px;
+            border: 1px solid #888;
+            border-radius: 2px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background: #fff;
+            color: var(--text);
         }
-
-        .form-group select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        .field select:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--accent);
             color: white;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 12px;
-            font-size: 1rem;
+            border: 1px solid var(--accent);
+            padding: 10px 24px;
+            border-radius: 2px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3);
         }
+        .btn:hover:not(:disabled) { background: #0e3d21; }
+        .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4); }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-outline {
+            background: #fff;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+        .btn-outline:hover:not(:disabled) { background: var(--accent-light); }
 
-        .loading { display: none; text-align: center; padding: 40px; }
+        /* ---------- Loading / Error ---------- */
+        .loading { display: none; text-align: center; padding: 40px 0; color: var(--muted); }
         .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border: 2.5px solid #ddd;
+            border-top: 2.5px solid var(--accent);
             border-radius: 50%;
-            width: 50px; height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            width: 30px; height: 30px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 14px;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .error {
-            background: #ff6b6b;
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 20px 0;
+            background: var(--error-bg);
+            color: var(--error);
+            border: 1px solid var(--error);
+            padding: 12px 15px;
+            border-radius: 2px;
+            margin-bottom: 20px;
             display: none;
+            font-size: 0.92rem;
         }
 
+        /* ---------- Results ---------- */
         .results { display: none; }
 
         .results-header {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px 12px 0 0;
             text-align: center;
+            margin-bottom: 14px;
         }
-        .results-header h2 { font-size: 1.5rem; margin-bottom: 10px; }
-        .results-info { font-size: 1rem; opacity: 0.9; }
-
-        .table-container {
-            overflow-x: auto;
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        .results-header h2 {
+            font-family: 'Noto Serif', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .results-info {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-top: 4px;
         }
 
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 15px 12px; text-align: left; border-bottom: 1px solid #e1e8ed; }
-        th {
-            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--border);
+        }
+        th, td {
+            border: 1px solid var(--border);
+            padding: 9px 10px;
+            text-align: center;
             font-size: 0.9rem;
         }
-        td { font-size: 0.95rem; color: #2c3e50; }
-        tr:hover { background: rgba(102, 126, 234, 0.05); }
+        th {
+            background: #e9e9e9;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+        }
+        td:nth-child(2) { text-align: left; }
 
-        .print-btn {
-            margin-top: 20px;
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-            box-shadow: 0 8px 15px rgba(39, 174, 96, 0.3);
+        tbody tr:nth-child(even) { background: #fafafa; }
+
+        .total-row td {
+            font-weight: 700;
+            background: var(--accent-light);
+        }
+
+        .actions-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 22px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 0.95rem;
         }
 
         @media print {
             body { background: white; padding: 0; }
-            .container { box-shadow: none; padding: 20px; background: white; }
-            .form-container, .btn, .print-btn { display: none !important; }
+            .sheet { border: none; padding: 0; }
+            .control-bar, .actions-row { display: none !important; }
             .results { display: block !important; }
-            th { background: #34495e !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
         }
 
-        @media (max-width: 768px) {
-            .container { padding: 20px; }
-            .header h1 { font-size: 2rem; }
-            .form-container { flex-direction: column; }
-            .form-group { min-width: 100%; }
-            table { font-size: 0.8rem; }
-            th, td { padding: 10px 8px; }
+        @media (max-width: 640px) {
+            .sheet { padding: 20px 16px; }
+            .doc-header h1 { font-size: 1.3rem; }
+            .control-bar { flex-direction: column; align-items: stretch; }
+            table { font-size: 0.78rem; }
+            th, td { padding: 7px 6px; }
         }
-
-        .no-data { text-align: center; padding: 40px 20px; color: #7f8c8d; font-size: 1.1rem; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🏫 School Wise Students Information</h1>
+    <div class="sheet">
+        <header class="doc-header">
+            <h1>School Wise Students Information</h1>
             <p class="subtitle">SSC - 2026 | Student Distribution Report</p>
-        </div>
+        </header>
 
-        <div class="form-container">
-            <div class="form-group">
-                <label for="groupSelect">📚 Select Group:</label>
+        <div class="control-bar">
+            <div class="field">
+                <label for="groupSelect">Select Group</label>
                 <select id="groupSelect">
                     <option value="">Choose Group...</option>
                     <option value="HUMANITIES">Humanities</option>
@@ -168,8 +223,8 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="typeSelect">📋 Select Type:</label>
+            <div class="field">
+                <label for="typeSelect">Select Type</label>
                 <select id="typeSelect">
                     <option value="">Choose Type...</option>
                     <option value="REGULAR">Regular</option>
@@ -177,11 +232,7 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <button class="btn" id="generateBtn" onclick="generateReport()">
-                    ✨ Generate Report
-                </button>
-            </div>
+            <button class="btn" id="generateBtn" onclick="generateReport()">Generate Report</button>
         </div>
 
         <div class="loading" id="loading">
@@ -196,32 +247,28 @@
                 <h2 id="resultsTitle">School Wise Students Information</h2>
                 <p class="results-info" id="resultsInfo"></p>
             </div>
-            <div class="table-container">
-                <table id="dataTable">
-                    <thead>
-                        <tr>
-                            <th>EIIN</th>
-                            <th>School Name</th>
-                            <th>Female Range</th>
-                            <th>Female Total</th>
-                            <th>Male Range</th>
-                            <th>Male Total</th>
-                            <th>Grand Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
-            </div>
-            <div style="text-align: center;">
-                <button class="btn print-btn" onclick="printReport()">
-                    🖨️ Print Report
-                </button>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>EIIN</th>
+                        <th>School Name</th>
+                        <th>Female Range</th>
+                        <th>Female Total</th>
+                        <th>Male Range</th>
+                        <th>Male Total</th>
+                        <th>Grand Total</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+            <div class="actions-row">
+                <button class="btn btn-outline" onclick="printReport()">Print Report</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 👇 আপনার Apps Script Web App-এর Deployment URL (নতুন)
+        // 👇 আপনার Apps Script Web App-এর Deployment URL
         const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyEpbWMPEvNmQo41Ob5FmGC7fhaOVUt7N7U2bfOCWitktTBtQ-mFGyD4na81Fe4fcHCMg/exec';
 
         function generateReport() {
@@ -241,7 +288,7 @@
             resultsDiv.style.display = 'none';
             loadingDiv.style.display = 'block';
             generateBtn.disabled = true;
-            generateBtn.textContent = '⏳ Generating...';
+            generateBtn.textContent = 'Generating...';
 
             const url = `${WEBAPP_URL}?action=getData&group=${encodeURIComponent(group)}&type=${encodeURIComponent(type)}`;
 
@@ -250,7 +297,7 @@
                 .then(result => {
                     loadingDiv.style.display = 'none';
                     generateBtn.disabled = false;
-                    generateBtn.textContent = '✨ Generate Report';
+                    generateBtn.textContent = 'Generate Report';
 
                     if (result.success) {
                         displayResults(result);
@@ -261,7 +308,7 @@
                 .catch(error => {
                     loadingDiv.style.display = 'none';
                     generateBtn.disabled = false;
-                    generateBtn.textContent = '✨ Generate Report';
+                    generateBtn.textContent = 'Generate Report';
                     showError('Error: ' + error.message);
                 });
         }
@@ -281,7 +328,6 @@
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="7" class="no-data">
-                            <div>📊</div>
                             <p>No student data found for the selected criteria.</p>
                         </td>
                     </tr>
@@ -306,15 +352,14 @@
                 const grandTotal = totalFemale + totalMale;
 
                 const totalRow = document.createElement('tr');
-                totalRow.style.fontWeight = 'bold';
-                totalRow.style.backgroundColor = '#f8f9fa';
+                totalRow.className = 'total-row';
                 totalRow.innerHTML = `
-                    <td colspan="2"><strong>TOTAL</strong></td>
+                    <td colspan="2">TOTAL</td>
                     <td>-</td>
-                    <td><strong>${totalFemale}</strong></td>
+                    <td>${totalFemale}</td>
                     <td>-</td>
-                    <td><strong>${totalMale}</strong></td>
-                    <td><strong>${grandTotal}</strong></td>
+                    <td>${totalMale}</td>
+                    <td>${grandTotal}</td>
                 `;
                 tableBody.appendChild(totalRow);
             }
