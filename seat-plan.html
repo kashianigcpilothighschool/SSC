@@ -718,7 +718,7 @@
                     <button type="button" class="submit-btn" id="submitBtn" onclick="generateSeatPlan()">
                        সাবমিট
                     </button>
-                    <button type="button" class="print-btn no-print" onclick="printPage()">
+                    <button type="button" class="print-btn no-print" onclick="openPrintPage()">
                         প্রিন্ট করুন
                     </button>
                     <button type="button" class="print-btn no-print" id="localTestBtn" onclick="testDataCollection()">
@@ -768,6 +768,11 @@
         // এখানে আপনার Deploy করা Apps Script Web App URL বসান
         // ========================
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzylSVvuxiAjjSeL7AneJ3Yky97YnOsjLPyIMf8QUKziLCcoQry-63CajGTjOq50KZnMw/exec';
+
+        // ========================
+        // "প্রিন্ট করুন" বাটনের জন্য Apps Script Web App URL
+        // ========================
+        const PRINT_URL = 'https://script.google.com/macros/s/AKfycbx6DSRv_jHg5URM5ofKjIG0zIUotwGsum9iJPrk0LBd-tmhKPNi_4J5e4eFtB6V9RzZqQ/exec';
 
         // ========================
         // প্রতিটি টুলবার বাটনের জন্য আলাদা URL (এখানে পরিবর্তন করুন)
@@ -914,6 +919,18 @@
             }
         }
 
+        // "প্রিন্ট করুন" বাটন — শুধু এই বাটনেই প্রিন্ট URL খুলবে
+        function openPrintPage() {
+            if (!PRINT_URL || PRINT_URL.indexOf('এখানে') !== -1) {
+                showAlert('প্রিন্ট URL এখনো সেট করা হয়নি!', 'error');
+                log('PRINT_URL সেট করা নেই', 'error');
+                return;
+            }
+            log('প্রিন্ট পেজে যাওয়া হচ্ছে: ' + PRINT_URL, 'info');
+            window.open(PRINT_URL, '_blank');
+        }
+
+        // টুলবারের অন্য বাটনগুলো — এখন আর printPage() কল হয় না, তাই প্রিন্ট ডায়ালগ দেখাবে না
         function redirectToButton(key) {
             const targetUrl = BUTTON_URLS[key];
 
@@ -923,19 +940,12 @@
                 return;
             }
 
-            log(`প্রিন্ট করে ${key} পেজে যাওয়া হচ্ছে: ${targetUrl}`, 'info');
-
-            // প্রথমে প্রিন্ট ডায়ালগ চালু করা হচ্ছে
-            printPage();
-
-            // প্রিন্ট ডায়ালগ বন্ধ হওয়ার পর নতুন ট্যাবে টার্গেট পেজ খোলা হবে
-            setTimeout(() => {
-                window.open(targetUrl, '_blank');
-            }, 800);
+            log(`${key} পেজে যাওয়া হচ্ছে: ${targetUrl}`, 'info');
+            window.open(targetUrl, '_blank');
         }
 
         function printPage() {
-            log('প্রিন্ট ফাংশন চালু...', 'info');
+            log('ব্রাউজার প্রিন্ট ফাংশন চালু...', 'info');
 
             try {
                 const container = document.querySelector('.container');
