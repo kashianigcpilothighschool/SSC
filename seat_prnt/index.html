@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>পরীক্ষার সিট প্ল্যান</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- ==============================================================
+       ফন্ট লোড করা হচ্ছে (গুগল ফন্টস থেকে)।
+       - Tiro Bangla / Hind Siliguri: বাংলা টেক্সটের জন্য
+       - JetBrains Mono: (রিজার্ভ, বর্তমানে ব্যবহৃত হচ্ছে না)
+  ============================================================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+  /* ==============================================================
+     ১) কালার প্যালেট / থিম ভেরিয়েবল
+  ============================================================== */
+  :root{
+      --paper:#F1F3EC;       /* পুরো পেজের ব্যাকগ্রাউন্ড */
+      --card:#FFFEFA;        /* রুম/কার্ডের ব্যাকগ্রাউন্ড */
+      --ink:#232A20;         /* সাধারণ টেক্সট রঙ */
+      --ink-soft:#5B6356;    /* হালকা/সেকেন্ডারি টেক্সট রঙ */
+      --forest:#12522F;      /* প্রধান একসেন্ট (সবুজ) */
+      --forest-dark:#0B3A21; /* গাঢ় সবুজ (হেডিং/শিরোনাম) */
+      --maroon:#7A1F3D;      /* টোটাল/গুরুত্বপূর্ণ লাইন হাইলাইট */
+      --gold:#AD8A3E;        /* সোনালি বর্ডার/একসেন্ট */
+      --gold-soft:#E7DBB4;   /* হালকা সোনালি ব্যাকগ্রাউন্ড (বক্স) */
+      --line:#D8D2BC;        /* সাধারণ বর্ডার/ডিভাইডার রঙ */
+      --door-gray:#565F5C;   /* দরজা ব্লকের রঙ */
+  }
+
+  /* ==============================================================
+     ২) বেসিক রিসেট ও বডি স্টাইল
+  ============================================================== */
+  *{ box-sizing:border-box; }
+
+  body{
+      margin:0;
+      padding:36px 20px 60px 20px;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+      background:var(--paper);
+      color:var(--ink);
+  }
+
+  h2{
+      display:none;
+  }
+
+  /* ==============================================================
+     ৩) টুলবার (রুম সিলেক্ট ড্রপডাউন + প্রিন্ট বাটন)
+  ============================================================== */
+  .toolbar{
+      max-width:960px;
+      margin:0 auto 28px auto;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:14px 22px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:6px;
+  }
+  .room-select-wrap{
+      max-width:960px;
+      margin:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+  }
+  .room-select-wrap label{
+      font-weight:600;
+      color:var(--ink-soft);
+      font-size:13.5px;
+      letter-spacing:0.2px;
+  }
+  #roomSelect{
+      font-family:'Kalpurush','Hind Siliguri';
+      font-size:15px;
+      font-weight:600;
+      padding:8px 16px;
+      border-radius:4px;
+      border:1px solid var(--line);
+      background:var(--paper);
+      color:var(--ink);
+      cursor:pointer;
+  }
+  .print-btn{
+      font-family:'Kalpurush','Hind Siliguri';
+      font-size:14px;
+      font-weight:700;
+      padding:8px 20px;
+      border-radius:4px;
+      border:1.5px solid var(--forest);
+      background:transparent;
+      color:var(--forest);
+      cursor:pointer;
+      letter-spacing:0.2px;
+      transition:background 0.15s ease, color 0.15s ease;
+  }
+  .print-btn:hover{
+      background:var(--forest);
+      color:#fff;
+  }
+
+  /* ==============================================================
+     ৪) মূল "রুম" কার্ড কন্টেইনার
+  ============================================================== */
+  .room{
+      max-width:960px;
+      margin:0 auto;
+      position:relative;
+      background:var(--card);
+      padding:0 0 44px 0;
+      border-radius:5px;
+      border:2.5px solid var(--forest);
+      box-shadow:
+          0 0 0 5px var(--paper),
+          0 0 0 7px var(--gold),
+          0 2px 14px rgba(35,42,32,0.10);
+      overflow:hidden;
+  }
+  .room::before{
+      content:"";
+      display:block;
+      height:5px;
+      background:var(--forest);
+  }
+  .room::after{
+      display:none;
+  }
+  .room-body{
+      padding:20px 42px 0 42px;
+  }
+
+  /* ==============================================================
+     ৫) হেডার ইনফো বক্স
+  ============================================================== */
+  .info-box{
+      width:100%;
+      max-width:920px;
+      margin:0 auto 0px auto;
+      font-size:15px;
+      line-height:1.0;
+      color:var(--ink);
+  }
+  .info-line{
+      white-space:pre-wrap;
+      padding:0px 0;
+  }
+  .info-line.single{
+      text-align:center;
+      font-family:'Kalpurush','Tiro Bangla', serif;
+  }
+  .info-line.single.align-left{
+      text-align:left;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+  }
+  .info-line.single.align-right{
+      text-align:right;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+  }
+  .info-line.single.section-title{
+      font-weight:700;
+      margin:8px 0 4px 0;
+      padding-top:6px;
+      border-top:1.5px dashed var(--gold);
+      color:var(--forest-dark);
+  }
+  .info-line.single.total-line{
+      font-weight:700;
+      font-family:'Times New Roman', Times, serif;
+      margin-top:6px;
+      padding-top:5px;
+      border-top:2px solid var(--forest);
+      color:var(--maroon);
+  }
+
+  .info-line.boxed{
+       display:grid;
+       grid-template-columns:minmax(0,1fr) minmax(180px,0.9fr) minmax(0,1fr);
+       align-items:center;
+       gap:8px;
+       width:100%;
+       margin:2px 0;
+   }
+   .info-line.boxed.two-col{
+       grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+   }
+   .info-line.boxed .field-box{
+       display:block;
+       text-align:center;
+       margin:2px 0;
+   }
+   .direction-cell{
+       text-align:center;
+       font-weight:700;
+       color:var(--forest-dark);
+       white-space:nowrap;
+   }
+   .direction-cell .direction-text{
+       display:block;
+       font-size:20px;
+       line-height:1.15;
+   }
+   .direction-cell .compass-line{
+       margin:0 !important;
+   }
+
+  .field-box{
+      display:inline-block;
+      color:var(--forest-dark);
+      background:var(--gold-soft);
+      border:1px solid var(--gold);
+      border-radius:5px;
+      padding:5px 16px;
+      margin:2px 4px;
+      font-weight:700;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+      white-space:nowrap;
+  }
+
+  .small-box-wrap{
+      text-align:center;
+      margin:0px auto 2px auto;
+  }
+  .small-box{
+      display:inline-block;
+      color:var(--forest-dark);
+      background:var(--gold-soft);
+      border:1px solid var(--gold);
+      border-radius:5px;
+      padding:5px 18px;
+      font-weight:700;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+  }
+  .small-box-square{
+      display:inline-block;
+      color:#fff;
+      background:var(--forest);
+      border-radius:3px;
+      padding:5px 20px;
+      font-weight:700;
+      font-family:'Times New Roman', Times, serif;
+      letter-spacing:1px;
+  }
+  .small-box-seatplan{
+      display:inline-block;
+      color:#fff;
+      background:linear-gradient(135deg, var(--forest) 0%, var(--forest-dark) 100%);
+      border:2px solid var(--gold);
+      border-radius:10px;
+      padding:12px 46px;
+      font-weight:700;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+      letter-spacing:2px;
+      box-shadow:0 3px 10px rgba(11,58,33,0.35), inset 0 0 0 3px rgba(255,255,255,0.08);
+      text-shadow:0 1px 2px rgba(0,0,0,0.25);
+  }
+
+  .plain-line{
+      width:100%;
+      max-width:920px;
+      margin:0 auto 8px auto;
+      text-align:center;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+      font-weight:700;
+      color:var(--maroon);
+  }
+
+  .info-line.multi{
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      margin:3px 0;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+  }
+  .info-line.multi span{
+      flex:0 1 auto;
+      font-weight:700;
+  }
+  .info-line.multi.thick-underline{
+      padding-bottom:0px;
+      border-bottom:3px solid var(--forest);
+      font-family:'Times New Roman', Times, serif;
+      letter-spacing:0.5px;
+  }
+
+  /* ==============================================================
+     ৬) স্কুল/কলেজ তালিকার টেবিল (schoolTable)
+  ============================================================== */
+  .school-table-wrap{
+      width:100%;
+      max-width:920px;
+      margin:0 auto 12px auto;
+      color:var(--ink);
+  }
+  .school-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:15.5px;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+  }
+  .school-table th, .school-table td{
+      padding:5px 12px;
+      text-align:center;
+      border-bottom:1px solid var(--line);
+  }
+  .school-table th{
+      font-weight:700;
+      font-size:40px;
+      text-decoration:underline;
+      text-underline-offset:6px;
+      color:var(--forest-dark);
+      background:transparent;
+      border-bottom:4px solid var(--forest);
+      box-shadow:0 5px 0 -2px var(--gold);
+      padding-bottom:10px;
+      letter-spacing:0.4px;
+  }
+  .school-table th:first-child{ border-top-left-radius:0; }
+  .school-table th:last-child{ border-top-right-radius:0; }
+  .school-table td:first-child{ text-align:left; }
+  .school-table tbody tr:nth-child(even){ background:rgba(18,82,47,0.035); }
+  .school-table-total{
+      text-align:right;
+      font-weight:700;
+      font-size:16px;
+      margin-top:6px;
+      padding-top:0px;
+      padding-right:10px;
+      color:var(--maroon);
+      font-family:'Times New Roman', Times, serif;
+      border-top:2px solid var(--forest);
+  }
+  .info-box-separate{
+      width:100%;
+      max-width:920px;
+      margin:0 auto 18px auto;
+      font-size:20px;
+      text-align:center;
+      color:var(--ink);
+      font-weight:700;
+  }
+
+  /* ==============================================================
+     ৭) সিট রো / বেঞ্চ / দরজা / পথ
+  ============================================================== */
+  .row{
+      display:flex;
+      justify-content:center;
+      align-items:stretch;
+      margin:14px 0;
+      flex-wrap:wrap;
+      gap:0;
+  }
+  .bench-wrap{
+      position:relative;
+      min-width:280px;
+      padding-bottom:6px;
+  }
+  .bench{
+      position:relative;
+      min-width:270px;
+      min-height:60px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-top:3px solid var(--forest);
+      border-radius:4px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:0;
+      padding:11px 8px;
+      font-size:16px;
+      font-weight:600;
+      font-family:'Times New Roman', Times, serif;
+      color:var(--ink);
+      box-shadow:0 1px 4px rgba(35,42,32,0.06);
+      z-index:2;
+  }
+  .bench-leg, .bench::after{
+      display:none;
+  }
+  .bench div{
+      white-space:pre-line;
+      text-align:center;
+      flex:1 1 0;
+      min-width:70px;
+      padding:0 15px;
+      position:relative;
+  }
+  .bench div:not(:last-child)::after{
+      content:"";
+      position:absolute;
+      right:0; top:-11px; bottom:-11px;
+      border-right:1px dashed var(--line);
+  }
+  .seat-empty{
+      color:var(--ink-soft);
+      font-style:italic;
+      font-weight:400;
+      font-size:13px;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+  }
+  .door{
+      min-width:270px;
+      min-height:60px;
+      background:var(--door-gray);
+      color:#fff;
+      border:1px solid #3E4542;
+      border-radius:4px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+      font-size:15px;
+      font-weight:700;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+      box-shadow:0 1px 4px rgba(35,42,32,0.08);
+      letter-spacing:0.5px;
+  }
+  .door::before{
+      content:"";
+      width:11px; height:16px;
+      border:2px solid #fff;
+      border-radius:2px;
+      display:inline-block;
+  }
+  .path{
+      width:56px;
+      text-align:center;
+      font-weight:bold;
+      font-size:16px;
+  }
+
+  /* ==============================================================
+     ৮) রেসপনসিভ (ছোট স্ক্রিন) স্টাইল
+  ============================================================== */
+  @media (max-width: 720px){
+      .room-body{ padding:26px 16px 0 16px; }
+      .bench, .bench-wrap, .door{ min-width:150px; }
+      .info-line.boxed,
+      .info-line.boxed.two-col{
+          grid-template-columns:1fr;
+      }
+      .direction-cell{ order:-1; }
+  }
+
+  /* ==============================================================
+     ৯) প্রিন্ট স্টাইল
+  ============================================================== */
+  @page{
+      size:legal;
+      margin:10mm 12mm;
+  }
+  @media print{
+      *{
+          -webkit-print-color-adjust:exact;
+          print-color-adjust:exact;
+      }
+      html, body{
+          width:100%;
+          background:white;
+          padding:0;
+          margin:0;
+          font-size:13px;
+          line-height:1.2;
+      }
+      .info-box{
+          line-height:1.15;
+      }
+      .info-line{
+          padding:0;
+      }
+      .info-line.single.section-title,
+      .info-line.single.total-line{
+          margin-top:6px;
+          padding-top:5px;
+      }
+      .info-line.multi{
+          margin:3px 0;
+      }
+      .plain-line{
+          margin:0 auto 8px auto;
+      }
+      .small-box-wrap{
+          margin:0 auto 8px auto;
+      }
+      .school-table th, .school-table td{
+          padding:4px 8px;
+      }
+      .school-table-total{
+          margin-top:6px;
+          padding-top:5px;
+      }
+      .toolbar{
+          display:none;
+      }
+      .room{
+          max-width:100%;
+          width:100%;
+          margin:0;
+          border:5px double #000;
+          box-shadow:none;
+          page-break-inside:auto;
+          break-inside:auto;
+      }
+      .room::before{
+          background:#000;
+      }
+      .room-body{
+          padding:18px 22px 0 22px;
+      }
+      .info-box, .school-table-wrap, .plain-line, .small-box-wrap{
+          page-break-inside:avoid;
+          break-inside:avoid;
+      }
+      .row{
+          page-break-inside:avoid;
+          break-inside:avoid;
+          margin:12px 0;
+      }
+      .bench, .door{
+          min-height:52px;
+      }
+      thead{
+          display:table-header-group;
+      }
+      tr{
+          page-break-inside:avoid;
+          break-inside:avoid;
+      }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ==================================================================
+     টুলবার: রুম বাছাই করার ড্রপডাউন + প্রিন্ট বাটন
+================================================================== -->
+<div class="toolbar">
+  <div class="room-select-wrap">
+    <label for="roomSelect">রুম নির্বাচন করুন: </label>
+    <select id="roomSelect" onchange="loadRoom(this.value)">
+      <option value="">লোড হচ্ছে...</option>
+    </select>
+    <button class="print-btn" onclick="window.print()">প্রিন্ট করুন</button>
+  </div>
+</div>
+
+<!-- ==================================================================
+     মূল রুম কার্ড
+================================================================== -->
+<div class="room">
+  <div class="room-body">
+    <div id="info"></div>
+    <div id="schoolTable"></div>
+    <div id="room">একটি রুম নির্বাচন করুন।</div>
+  </div>
+</div>
+
+<script>
+// ====================================================================
+// ০) Apps Script Web App API-এর URL — এখানেই backend-এর সাথে যোগাযোগ হয়।
+//    ডিপ্লয়মেন্ট বদলালে (নতুন /exec URL হলে) এইটা আপডেট করতে হবে।
+// ====================================================================
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzplQucfYG95t46JVmbF4wNhyImfUGlIcKy1RCoVThB8m3wCwmnzznfbp-sUeWsiLQizg/exec";
+
+// ====================================================================
+// ১) কনফিগারেশন / কনস্ট্যান্ট
+// ====================================================================
+const SEATS_PER_BENCH = 2;
+
+const COMPASS_SVG = `
+<svg width="56" height="56" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="46" fill="#FFFEFA" stroke="#12522F" stroke-width="3"/>
+  <circle cx="50" cy="50" r="38" fill="none" stroke="#AD8A3E" stroke-width="1.5"/>
+  <polygon points="50,12 58,50 50,54 42,50" fill="#7A1F3D"/>
+  <polygon points="50,88 58,50 50,46 42,50" fill="#5B6356"/>
+  <polygon points="12,50 50,42 54,50 50,58" fill="#AD8A3E"/>
+  <polygon points="88,50 50,42 46,50 50,58" fill="#AD8A3E"/>
+  <circle cx="50" cy="50" r="4" fill="#0B3A21"/>
+  <text x="50" y="24" text-anchor="middle" font-family="Kalpurush,Hind Siliguri,sans-serif" font-size="15" font-weight="700" fill="#0B3A21">উ</text>
+  <text x="50" y="83" text-anchor="middle" font-family="Kalpurush,Hind Siliguri,sans-serif" font-size="15" font-weight="700" fill="#0B3A21">দ</text>
+  <text x="84" y="55" text-anchor="middle" font-family="Kalpurush,Hind Siliguri,sans-serif" font-size="15" font-weight="700" fill="#0B3A21">পূ</text>
+  <text x="16" y="55" text-anchor="middle" font-family="Kalpurush,Hind Siliguri,sans-serif" font-size="15" font-weight="700" fill="#0B3A21">প</text>
+</svg>`;
+
+// ====================================================================
+// ২) পেজ লোড হলেই রুম-লিস্ট আনা (fetch দিয়ে Apps Script JSON API কল)
+// ====================================================================
+fetch(WEB_APP_URL + "?action=rooms")
+  .then(function(res){ return res.json(); })
+  .then(function(data){
+    if(data.error) throw new Error(data.error);
+    populateRoomList(data.rooms);
+  })
+  .catch(showError);
+
+// ====================================================================
+// ৩) ড্রপডাউনে রুমের তালিকা বসানো (এবং প্রথম রুম অটো-লোড)
+// ====================================================================
+function populateRoomList(rooms){
+  const select = document.getElementById("roomSelect");
+  select.innerHTML = "";
+
+  if(!rooms || rooms.length === 0){
+    select.innerHTML = "<option value=''>কোনো রুম পাওয়া যায়নি</option>";
+    return;
+  }
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "-- একটি রুম বেছে নিন --";
+  select.appendChild(placeholder);
+
+  rooms.forEach(function(name){
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    select.appendChild(opt);
+  });
+
+  select.value = rooms[0];
+  loadRoom(rooms[0]);
+}
+
+// ====================================================================
+// ৪) ড্রপডাউনে রুম বদলালে কল হয় — fetch দিয়ে সিলেক্টেড রুমের সিট প্ল্যান আনা
+// ====================================================================
+function loadRoom(roomName){
+  if(!roomName) return;
+  document.getElementById("info").innerHTML = "";
+  document.getElementById("schoolTable").innerHTML = "";
+  document.getElementById("room").innerHTML = "লোড হচ্ছে...";
+
+  fetch(WEB_APP_URL + "?room=" + encodeURIComponent(roomName))
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if(data.error) throw new Error(data.error);
+      showSeat(data);
+    })
+    .catch(showError);
+}
+
+// ====================================================================
+// ৫) মূল রেন্ডার ফাংশন: ব্যাকএন্ড থেকে ডেটা আসার পর পুরো UI বসানো
+//    data = { header: [...লাইন...], schoolTable: {...}, seats: [...রো...] }
+// ====================================================================
+function showSeat(data){
+  if(!data){
+    document.getElementById("info").innerHTML = "";
+    document.getElementById("schoolTable").innerHTML = "";
+    document.getElementById("room").innerHTML = "<p style='text-align:center'>কোনো তথ্য পাওয়া যায়নি।</p>";
+    return;
+  }
+
+  // ---------- ৫ক) হেডার তথ্য (কক্ষ নং, বিভাগ, মুখী ইত্যাদি) রেন্ডার ----------
+  const headerLines = data.header || [];
+  if(headerLines.length > 0){
+    const groups = [];
+    let currentBoxLines = [];
+
+    function flushBox(){
+      if(currentBoxLines.length > 0){
+        groups.push({ type: "box", lines: currentBoxLines });
+        currentBoxLines = [];
+      }
+    }
+
+    headerLines.forEach(function(items){
+      const style = classifyRow(items);
+      if(style.type === "small"){
+        flushBox();
+        groups.push({ type: "small", text: items.join(" "), style: style });
+      } else if(style.type === "plain"){
+        flushBox();
+        groups.push({ type: "plain", text: items.join(" "), style: style });
+      } else {
+        currentBoxLines.push({ items: items, style: style });
+      }
+    });
+    flushBox();
+
+    // "আসন পরিকল্পনা" (small/seatplan বক্স) এবং তার পাশের "কক্ষ নংঃ ..."
+    // (plain লাইন) — এই দুটো পাশাপাশি থাকলে একটাই বক্সে মিশিয়ে দেখানো
+    // হয় (টাইটেল + সাবটাইটেল হিসেবে)।
+    for(let i = 0; i < groups.length - 1; i++){
+      const a = groups[i], b = groups[i + 1];
+      const aIsSeatplan = a.type === "small" && a.style && a.style.shape === "seatplan";
+      const bIsSeatplan = b.type === "small" && b.style && b.style.shape === "seatplan";
+      const aIsRoomPlain = a.type === "plain" && a.text.indexOf("কক্ষ নং") !== -1;
+      const bIsRoomPlain = b.type === "plain" && b.text.indexOf("কক্ষ নং") !== -1;
+
+      if(aIsSeatplan && bIsRoomPlain){
+        groups[i] = { type: "small", text: a.text, subtext: b.text, style: a.style };
+        groups.splice(i + 1, 1);
+      } else if(aIsRoomPlain && bIsSeatplan){
+        groups[i] = { type: "small", text: b.text, subtext: a.text, style: b.style };
+        groups.splice(i + 1, 1);
+      }
+    }
+
+    function renderBoxLine(line){
+      const style = line.style;
+
+      if(line.items.length === 1){
+        const alignClass = style.align === "left" ? " align-left" : (style.align === "right" ? " align-right" : "");
+        const totalClass = style.isTotal ? " total-line" : "";
+        const boldStyle = style.bold ? "font-weight:700;" : "";
+        const colorStyle = style.color ? `color:${style.color};` : "";
+        const directionMarginStyle = style.isDirection ? "margin-top:-10px;" : "";
+        const textLine = `<div class="info-line single${alignClass}${totalClass}" style="font-size:${style.fontSize}px;${boldStyle}${colorStyle}${directionMarginStyle}">${escapeHtml(line.items[0])}</div>`;
+        const compassLine = style.isDirection
+          ? `<div class="compass-line" style="text-align:center;margin:0px 0 0px 0;">${COMPASS_SVG}</div>`
+          : "";
+        return textLine + compassLine;
+      }
+
+      if(style.type === "boxed-multi"){
+        const directionItems = line.items.filter(isDirectionText);
+        const cells = [];
+
+        line.items.forEach(function(item){
+          if(isDirectionText(item)){
+            cells.push(
+              `<div class="direction-cell">
+                 <span class="direction-text">${escapeHtml(item)}</span>
+                 <div class="compass-line">${COMPASS_SVG}</div>
+               </div>`
+            );
+          }else{
+            cells.push(
+              `<span class="field-box" style="font-size:${style.fontSize}px;">${escapeHtml(item)}</span>`
+            );
+          }
+        });
+
+        const twoColClass = line.items.length === 2 && directionItems.length === 0 ? " two-col" : "";
+        return `<div class="info-line boxed${twoColClass}">${cells.join("")}</div>`;
+      }
+
+      const spans = line.items.map(function(item){
+        return `<span>${escapeHtml(item)}</span>`;
+      }).join("");
+      const extraClass = style.type === "normal-multi-underline" ? " thick-underline" : "";
+      const hasDirectionMulti = line.items.some(isDirectionText);
+      const compassLineMulti = hasDirectionMulti
+        ? `<div class="compass-line" style="text-align:center;margin:2px 0 3px 0;">${COMPASS_SVG}</div>`
+        : "";
+      return `<div class="info-line multi${extraClass}" style="font-size:${style.fontSize}px;">${spans}</div>${compassLineMulti}`;
+    }
+
+    // ---------- সব গ্রুপকে একসাথে জোড়া দিয়ে চূড়ান্ত ইনফো-বক্স HTML বানানো ----------
+    const infoHtml = groups.map(function(group){
+      if(group.type === "box"){
+        return `<div class="info-box">${group.lines.map(renderBoxLine).join("")}</div>`;
+      }
+      if(group.type === "plain"){
+        const alignStyle = group.style.align === "left" ? "text-align:left;" : "";
+        return `<div class="plain-line" style="font-size:${group.style.fontSize}px;${alignStyle}">${escapeHtml(group.text)}</div>`;
+      }
+      // "small" টাইপ — একক বক্স (যেমন "আসন পরিকল্পনা" শিরোনাম বা "পার্শ্বের ভবন")
+      const boxClass = group.style.shape === "square" ? "small-box-square" : (group.style.shape === "seatplan" ? "small-box-seatplan" : "small-box");
+      const subtextHtml = group.subtext
+        ? `<div style="font-size:${Math.round(group.style.fontSize * 0.65)}px;font-weight:700;margin-top:8px;letter-spacing:0.5px;">${escapeHtml(group.subtext)}</div>`
+        : "";
+      const wrapMargin = group.style.tightMargin ? "margin:0 auto;" : "";
+      return `<div class="small-box-wrap" style="${wrapMargin}"><span class="${boxClass}" style="font-size:${group.style.fontSize}px;">${escapeHtml(group.text)}${subtextHtml}</span></div>`;
+    }).join("");
+
+    document.getElementById("info").innerHTML = infoHtml;
+  } else {
+    document.getElementById("info").innerHTML = "";
+  }
+
+  // ---------- ৫খ) স্কুল/কলেজ তালিকার টেবিল রেন্ডার ----------
+  const schoolTable = data.schoolTable;
+  if(schoolTable && schoolTable.header && schoolTable.header.length > 0){
+    const theadHtml = `<tr>${schoolTable.header.map(function(h){
+      return `<th style="font-size:40px;font-weight:700;text-decoration:underline;text-underline-offset:6px;">${escapeHtml(h)}</th>`;
+    }).join("")}</tr>`;
+
+    const tbodyHtml = (schoolTable.rows || []).map(function(row){
+      return `<tr>${row.map(function(cell){
+        return `<td>${escapeHtml(cell)}</td>`;
+      }).join("")}</tr>`;
+    }).join("");
+
+    const totalHtml = schoolTable.total
+      ? `<div class="school-table-total">${escapeHtml(schoolTable.total)}</div>`
+      : "";
+
+    document.getElementById("schoolTable").innerHTML =
+      `<div class="school-table-wrap">
+        <table class="school-table">
+          <thead>${theadHtml}</thead>
+          <tbody>${tbodyHtml}</tbody>
+        </table>
+        ${totalHtml}
+      </div>`;
+  } else {
+    document.getElementById("schoolTable").innerHTML = "";
+  }
+
+  // ---------- ৫গ) মূল সিট গ্রিড (বেঞ্চ/দরজা/পথ) রেন্ডার ----------
+  const seatRows = data.seats || [];
+  if(seatRows.length === 0){
+    document.getElementById("room").innerHTML = "<p style='text-align:center'>কোনো সিট তথ্য পাওয়া যায়নি।</p>";
+    return;
+  }
+
+  let html = "";
+  seatRows.forEach(function(rowCells){
+    const benches = clusterIntoBenches(rowCells);
+    const parts = benches.map(renderBench);
+    html += `<div class="row">${parts.join('<div class="path"></div>')}</div>`;
+  });
+
+  document.getElementById("room").innerHTML = html;
+}
+
+// ====================================================================
+// ৬) হেল্পার: টেক্সটে দিক নির্দেশক (মুখী) শব্দ আছে কিনা যাচাই
+// ====================================================================
+function isDirectionText(str){
+  const s = String(str);
+  return (
+    s.indexOf("উত্তরমুখী") !== -1 || s.indexOf("উত্তর মুখী") !== -1 ||
+    s.indexOf("দক্ষিণমুখী") !== -1 || s.indexOf("দক্ষিণ মুখী") !== -1 ||
+    s.indexOf("পূর্বমুখী") !== -1 || s.indexOf("পূর্ব মুখী") !== -1 ||
+    s.indexOf("পশ্চিমমুখী") !== -1 || s.indexOf("পশ্চিম মুখী") !== -1
+  );
+}
+
+// ====================================================================
+// ৭) হেডার রো ক্লাসিফায়ার
+// ====================================================================
+function classifyRow(items){
+  const t = items.join(" ");
+
+  if(t.indexOf("কক্ষ নংঃ") !== -1){
+    if(items.length === 1){
+      return { type: "plain", fontSize: 36, align: "left" };
+    }
+    return { type: "boxed-multi", fontSize: 16 };
+  }
+  if(t.indexOf("বেঞ্চের সংখ্যা") !== -1){
+    if(items.length === 1){
+      return { type: "normal-single", fontSize: 28, align: "left", bold: true };
+    }
+    return { type: "boxed-multi", fontSize: 16 };
+  }
+  if(t.indexOf("পরীক্ষার্থীর সংখ্যা") !== -1){
+    if(items.length === 1){
+      return { type: "normal-single", fontSize: 28, align: "right", bold: true };
+    }
+    return { type: "boxed-multi", fontSize: 16 };
+  }
+  if(t.indexOf("বিভাগঃ") !== -1){
+    return { type: "normal-single", fontSize: 20, align: "right", bold: true };
+  }
+  if(isDirectionText(t)){
+    return { type: "normal-single", fontSize: 20, bold: true, isDirection: true };
+  }
+  if(t.indexOf("পার্শ্বের ভবন") !== -1){
+    return { type: "small", fontSize: 24, bold: true, tightMargin: true };
+  }
+  if(t.indexOf("আসন পরিকল্পনা") !== -1){
+    return { type: "small", fontSize: 30, bold: true, shape: "seatplan" };
+  }
+  if(t.indexOf("মোট") !== -1){
+    return { type: "normal-single", fontSize: 20, align: "right", isTotal: true, bold: true };
+  }
+
+  if(items.length === 1){
+    if(t.indexOf("এস.এস.সি") !== -1){
+      return { type: "normal-single", fontSize: 32, bold: true };
+    }
+    if(t.indexOf("পরীক্ষা কেন্দ্র") !== -1){
+      return { type: "normal-single", fontSize: 25, bold: true };
+    }
+    if(t.trim().charAt(0) === "(" && t.trim().slice(-1) === ")"){
+      return { type: "normal-single", fontSize: 20 };
+    }
+    if(t.indexOf("ভেন্যুঃ") !== -1){
+      return { type: "normal-single", fontSize: 20, align: "left", bold: true };
+    }
+    return { type: "normal-single", fontSize: 21 };
+  }
+
+  const isCenterCodeLine = t.indexOf("কেন্দ্র কোড") !== -1;
+  return {
+    type: isCenterCodeLine ? "normal-multi-underline" : "normal-multi",
+    fontSize: isCenterCodeLine ? 20 : 15
+  };
+}
+
+// ====================================================================
+// ৮) হেল্পার: HTML-ইনজেকশন এড়াতে টেক্সট এস্কেপ করা
+// ====================================================================
+function escapeHtml(str){
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+// ====================================================================
+// ৯) বেঞ্চ ক্লাস্টারিং
+// ====================================================================
+function clusterIntoBenches(rowCells){
+  const clusters = [];
+
+  for(let i = 0; i < rowCells.length; i += SEATS_PER_BENCH){
+    const group = rowCells.slice(i, i + SEATS_PER_BENCH);
+
+    const allEmpty = group.every(function(c){
+      return !c || String(c).trim() === "";
+    });
+    if(allEmpty) continue;
+
+    clusters.push(group);
+  }
+
+  return clusters;
+}
+
+// ====================================================================
+// ১০) একটা বেঞ্চ (বা দরজা) HTML হিসেবে রেন্ডার করা
+// ====================================================================
+function renderBench(seats){
+  const hasDoor = seats.some(function(s){
+    return String(s).toLowerCase() === "door";
+  });
+  if(hasDoor){
+    return `<div class="door">দরজা</div>`;
+  }
+  const seatHtml = seats.map(function(s){
+    return `<div>${renderSeat(s)}</div>`;
+  }).join("");
+  return `
+    <div class="bench-wrap">
+      <div class="bench">${seatHtml}</div>
+    </div>
+  `;
+}
+
+// ====================================================================
+// ১১) একটা সিটের ভ্যালু রেন্ডার (খালি সিট হলে "xxxxxx" স্টাইল করে)
+// ====================================================================
+function renderSeat(value){
+  if(!value) return "";
+  if(String(value).toLowerCase() === "xxxxxx"){
+    return `<span class="seat-empty">xxxxxx</span>`;
+  }
+  return value;
+}
+
+// ====================================================================
+// ১২) এরর হ্যান্ডলার (fetch/backend কল ফেইল হলে)
+// ====================================================================
+function showError(err){
+  const select = document.getElementById("roomSelect");
+  if(select){
+    select.innerHTML = "<option value=''>এরর হয়েছে</option>";
+  }
+  document.getElementById("info").innerHTML = "";
+  document.getElementById("schoolTable").innerHTML = "";
+  document.getElementById("room").innerHTML =
+    "<p style='text-align:center;color:red'>ত্রুটি: " + (err && err.message ? err.message : err) + "</p>";
+}
+</script>
+</body>
+</html>
