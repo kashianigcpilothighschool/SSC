@@ -351,6 +351,11 @@
   /* ==============================================================
      ৭) সিট রো / বেঞ্চ / দরজা / পথ
   ============================================================== */
+  .row-wrap{
+      /* প্রিন্টে flex কন্টেইনারের উপর সরাসরি break-avoid কাজ করে না বলে,
+         .row-কে এই non-flex wrapper দিয়ে মোড়ানো হয়েছে যাতে একটা সারি
+         দুই পাতায় ভেঙে না যায়। */
+  }
   .row{
       display:flex;
       justify-content:center;
@@ -508,6 +513,7 @@
           margin:0;
           border:5px double #000;
           box-shadow:none;
+          overflow:visible;              /* সারি কাটা ঠেকাতে overflow:hidden বাদ */
           page-break-inside:auto;
           break-inside:auto;
       }
@@ -521,9 +527,15 @@
           page-break-inside:avoid;
           break-inside:avoid;
       }
+      .row-wrap{
+          /* .row (flex) নিজে break-avoid মানে না, তাই এই non-flex
+             wrapper-এর উপর break-avoid বসানো হলো — এটাই মূল ফিক্স */
+          page-break-inside:avoid;
+          break-inside:avoid-page;
+      }
       .row{
           page-break-inside:avoid;
-          break-inside:avoid;
+          break-inside:avoid-page;
           margin:12px 0;
       }
       .bench, .door{
@@ -820,7 +832,8 @@ function showSeat(data){
   seatRows.forEach(function(rowCells){
     const benches = clusterIntoBenches(rowCells);
     const parts = benches.map(renderBench);
-    html += `<div class="row">${parts.join('<div class="path"></div>')}</div>`;
+    // প্রিন্টে row দুই পাতায় ভেঙে যাওয়া ঠেকাতে .row-wrap (non-flex) দিয়ে মোড়ানো হলো
+    html += `<div class="row-wrap"><div class="row">${parts.join('<div class="path"></div>')}</div></div>`;
   });
 
   document.getElementById("room").innerHTML = html;
