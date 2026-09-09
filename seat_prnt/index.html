@@ -228,7 +228,7 @@
   .room-info-table{
       width:100%;
       max-width:920px;
-      margin:4px auto 10px auto;
+      margin:0px auto 0px auto;
       border-collapse:collapse;
   }
   .room-info-table td{
@@ -253,7 +253,7 @@
 
   .small-box-wrap{
       text-align:center;
-      margin:0px auto 2px auto;
+      margin:0px auto 0px auto;
   }
   .small-box{
       display:inline-block;
@@ -329,7 +329,7 @@
   .school-table{
       width:100%;
       border-collapse:collapse;
-      font-size:15.5px;
+      font-size:22px;
       font-family:'Kalpurush','Hind Siliguri',sans-serif;
   }
   .school-table th, .school-table td{
@@ -339,14 +339,14 @@
   }
   .school-table th{
       font-weight:700;
-      font-size:40px;
+      font-size:54px;
       text-decoration:underline;
-      text-underline-offset:6px;
+      text-underline-offset:8px;
       color:var(--forest-dark);
       background:transparent;
       border-bottom:4px solid var(--forest);
       box-shadow:0 5px 0 -2px var(--gold);
-      padding-bottom:10px;
+      padding-bottom:12px;
       letter-spacing:0.4px;
   }
   .school-table th:first-child{ border-top-left-radius:0; }
@@ -356,7 +356,7 @@
   .school-table-total{
       text-align:right;
       font-weight:700;
-      font-size:16px;
+      font-size:24px;
       margin-top:6px;
       padding-top:0px;
       padding-right:10px;
@@ -715,6 +715,94 @@ function showSeat(data){
   // ---------- ৫ক) হেডার তথ্য (কক্ষ নং, বিভাগ, মুখী ইত্যাদি) রেন্ডার ----------
   const headerLines = data.header || [];
   if(headerLines.length > 0){
+
+    // -----------------------------------------------------------------
+    // ধাপ ১: "কক্ষ নংঃ", "মুখী", "বিভাগঃ", "বেঞ্চের সংখ্যা",
+    // "পরীক্ষার্থীর সংখ্যা" — এই ৫টা ফিল্ড শিটে যে লাইনেই/যে ক্রমেই থাকুক
+    // না কেন (একসাথে এক লাইনে, বা আলাদা আলাদা লাইনে) — এখানে প্রতিটি
+    // আইটেম যাচাই করে আলাদা করে বের করে নেওয়া হচ্ছে। এভাবে করাতে
+    // শিটের সারি/মার্জ-প্যাটার্ন যাই হোক না কেন সবসময় একই বর্ডারযুক্ত
+    // টেবিল বসবে (কক্ষ ভেদে ফরম্যাট বদলাবে না)।
+    // -----------------------------------------------------------------
+    let roomNoText = null, directionText = null, departmentText = null, benchText = null, examineeText = null;
+    let firstFieldLineIndex = -1;
+    const cleanedHeaderLines = [];
+
+    headerLines.forEach(function(items){
+      const keep = [];
+      items.forEach(function(item){
+        const s = String(item);
+        if(roomNoText === null && s.indexOf("কক্ষ নং") !== -1){
+          roomNoText = s;
+          if(firstFieldLineIndex === -1) firstFieldLineIndex = cleanedHeaderLines.length;
+        } else if(directionText === null && isDirectionText(s)){
+          directionText = s;
+          if(firstFieldLineIndex === -1) firstFieldLineIndex = cleanedHeaderLines.length;
+        } else if(departmentText === null && s.indexOf("বিভাগঃ") !== -1){
+          departmentText = s;
+          if(firstFieldLineIndex === -1) firstFieldLineIndex = cleanedHeaderLines.length;
+        } else if(benchText === null && s.indexOf("বেঞ্চের সংখ্যা") !== -1){
+          benchText = s;
+          if(firstFieldLineIndex === -1) firstFieldLineIndex = cleanedHeaderLines.length;
+        } else if(examineeText === null && s.indexOf("পরীক্ষার্থীর সংখ্যা") !== -1){
+          examineeText = s;
+          if(firstFieldLineIndex === -1) firstFieldLineIndex = cleanedHeaderLines.length;
+        } else {
+          keep.push(item);
+        }
+      });
+      if(keep.length > 0){
+        cleanedHeaderLines.push(keep);
+      }
+    });
+
+    const hasRoomInfoFields = !!(roomNoText || directionText || departmentText || benchText || examineeText);
+
+    // ---------- বর্ডারযুক্ত রুম-ইনফো টেবিল বানানো (মুখী থাকলে rowspan সহ) ----------
+    function buildRoomInfoTableHtml(){
+      const dirCellContent = directionText
+        ? `${escapeHtml(directionText)}<div class="compass-line">${COMPASS_SVG}</div>`
+        : "";
+
+      if(directionText){
+        return `
+          <table class="room-info-table">
+            <tr>
+              <td>${roomNoText ? escapeHtml(roomNoText) : ""}</td>
+              <td class="ri-dir" rowspan="2">${dirCellContent}</td>
+              <td>${departmentText ? escapeHtml(departmentText) : ""}</td>
+            </tr>
+            <tr>
+              <td>${benchText ? escapeHtml(benchText) : ""}</td>
+              <td>${examineeText ? escapeHtml(examineeText) : ""}</td>
+            </tr>
+          </table>
+        `;
+      }
+
+      // মুখী তথ্য না থাকলে সাধারণ ২ কলামের টেবিল
+      return `
+        <table class="room-info-table">
+          <tr>
+            <td>${roomNoText ? escapeHtml(roomNoText) : ""}</td>
+            <td>${departmentText ? escapeHtml(departmentText) : ""}</td>
+          </tr>
+          <tr>
+            <td>${benchText ? escapeHtml(benchText) : ""}</td>
+            <td>${examineeText ? escapeHtml(examineeText) : ""}</td>
+          </tr>
+        </table>
+      `;
+    }
+
+    const roomInfoTableHtml = hasRoomInfoFields ? buildRoomInfoTableHtml() : "";
+
+    // -----------------------------------------------------------------
+    // ধাপ ২: বাকি লাইনগুলো (কেন্দ্র কোড, ভেন্যু, পার্শ্বের ভবন, আসন
+    // পরিকল্পনা, মোট ইত্যাদি) আগের নিয়মেই classify করে group তৈরি করা।
+    // ৫টা ফিল্ড যেখান থেকে প্রথম পাওয়া গিয়েছিল ঠিক সেই জায়গায় একটা
+    // "room-info-table" গ্রুপ বসিয়ে দেওয়া হচ্ছে যাতে আসল ক্রম ঠিক থাকে।
+    // -----------------------------------------------------------------
     const groups = [];
     let currentBoxLines = [];
 
@@ -725,7 +813,15 @@ function showSeat(data){
       }
     }
 
-    headerLines.forEach(function(items){
+    function insertRoomInfoTableIfDue(idx){
+      if(hasRoomInfoFields && idx === firstFieldLineIndex){
+        flushBox();
+        groups.push({ type: "room-info-table", html: roomInfoTableHtml });
+      }
+    }
+
+    cleanedHeaderLines.forEach(function(items, idx){
+      insertRoomInfoTableIfDue(idx);
       const style = classifyRow(items);
       if(style.type === "small"){
         flushBox();
@@ -737,6 +833,9 @@ function showSeat(data){
         currentBoxLines.push({ items: items, style: style });
       }
     });
+    // ৫টা ফিল্ডের কোনোটাই যদি বাকি কোনো লাইনে না মেশে (অর্থাৎ সব ফিল্ড-লাইন
+    // বাদ পড়ার পর ঐ ইনডেক্সে আর কোনো লাইন অবশিষ্ট নেই), তাহলে লুপ শেষে যোগ করা।
+    insertRoomInfoTableIfDue(cleanedHeaderLines.length);
     flushBox();
 
     // "আসন পরিকল্পনা" (small/seatplan বক্স) এবং তার পাশের "কক্ষ নংঃ ..."
@@ -809,63 +908,13 @@ function showSeat(data){
       return `<div class="info-line multi${extraClass}" style="font-size:${style.fontSize}px;">${spans}</div>${compassLineMulti}`;
     }
 
-    // ---------- কক্ষ নংঃ+মুখী+বিভাগঃ এবং বেঞ্চের সংখ্যা+পরীক্ষার্থীর সংখ্যা —
-    //            এই দুইটা লাইন একসাথে থাকলে সীমানাযুক্ত (bordered) একটা
-    //            টেবিলে মার্জ করে দেখানো হয় (স্ক্রিনশটের মতো), যেখানে
-    //            মুখী-এর ঘরটি দুই সারি জুড়ে (rowspan) থাকে। ----------
-    function canMergeRoomTable(line1, line2){
-      if(!line1 || !line2) return false;
-      if(line1.style.type !== "boxed-multi" || line2.style.type !== "boxed-multi") return false;
-      const hasDirection1 = line1.items.some(isDirectionText);
-      const hasDirection2 = line2.items.some(isDirectionText);
-      return hasDirection1 && !hasDirection2;
-    }
-
-    function renderRoomInfoTable(line1, line2){
-      const dirIndex = line1.items.findIndex(isDirectionText);
-      const dirText = line1.items[dirIndex];
-      const others1 = line1.items.filter(function(item, idx){ return idx !== dirIndex; });
-      const others2 = line2.items.slice();
-
-      const left1 = others1[0] || "";
-      const right1 = others1[1] || "";
-      const left2 = others2[0] || "";
-      const right2 = others2[1] || "";
-
-      return `
-        <table class="room-info-table">
-          <tr>
-            <td>${escapeHtml(left1)}</td>
-            <td class="ri-dir" rowspan="2">${escapeHtml(dirText)}<div class="compass-line">${COMPASS_SVG}</div></td>
-            <td>${escapeHtml(right1)}</td>
-          </tr>
-          <tr>
-            <td>${escapeHtml(left2)}</td>
-            <td>${escapeHtml(right2)}</td>
-          </tr>
-        </table>
-      `;
-    }
-
-    function renderBoxGroupLines(lines){
-      const parts = [];
-      for(let i = 0; i < lines.length; i++){
-        const line = lines[i];
-        const next = lines[i + 1];
-        if(canMergeRoomTable(line, next)){
-          parts.push(renderRoomInfoTable(line, next));
-          i++; // পরের লাইনটা ইতিমধ্যে ব্যবহার হয়ে গেছে, তাই স্কিপ
-          continue;
-        }
-        parts.push(renderBoxLine(line));
-      }
-      return parts.join("");
-    }
-
     // ---------- সব গ্রুপকে একসাথে জোড়া দিয়ে চূড়ান্ত ইনফো-বক্স HTML বানানো ----------
     const infoHtml = groups.map(function(group){
+      if(group.type === "room-info-table"){
+        return group.html;
+      }
       if(group.type === "box"){
-        return `<div class="info-box">${renderBoxGroupLines(group.lines)}</div>`;
+        return `<div class="info-box">${group.lines.map(renderBoxLine).join("")}</div>`;
       }
       if(group.type === "plain"){
         const alignStyle = group.style.align === "left" ? "text-align:left;" : "";
@@ -889,7 +938,7 @@ function showSeat(data){
   const schoolTable = data.schoolTable;
   if(schoolTable && schoolTable.header && schoolTable.header.length > 0){
     const theadHtml = `<tr>${schoolTable.header.map(function(h){
-      return `<th style="font-size:40px;font-weight:700;text-decoration:underline;text-underline-offset:6px;">${escapeHtml(h)}</th>`;
+      return `<th style="font-size:54px;font-weight:700;text-decoration:underline;text-underline-offset:8px;">${escapeHtml(h)}</th>`;
     }).join("")}</tr>`;
 
     const tbodyHtml = (schoolTable.rows || []).map(function(row){
