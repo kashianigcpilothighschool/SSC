@@ -349,20 +349,25 @@
   }
 
   /* ==============================================================
-     ৭) সিট রো / বেঞ্চ / দরজা / পথ
+     ৭) সিট গ্রিড (কলাম-ভিত্তিক) / বেঞ্চ / দরজা / পথ
   ============================================================== */
-  .row-wrap{
-      /* প্রিন্টে flex কন্টেইনারের উপর সরাসরি break-avoid কাজ করে না বলে,
-         .row-কে এই non-flex wrapper দিয়ে মোড়ানো হয়েছে যাতে একটা সারি
-         দুই পাতায় ভেঙে না যায়। */
-  }
-  .row{
+  .room-columns{
+      /* প্রতিটি "কলাম" (Sheet-এর column-pair: C-D, E-F, G-H, I-J) এখন একটা
+         উলম্ব বেঞ্চ-স্তম্ভ (সামনে থেকে পেছনে) হিসেবে দেখানো হয়;
+         কলামগুলো পাশাপাশি বসে। */
       display:flex;
       justify-content:center;
-      align-items:stretch;
-      margin:14px 0;
-      flex-wrap:wrap;
+      align-items:flex-start;
       gap:0;
+      flex-wrap:wrap;
+      margin:14px 0;
+  }
+  .bench-column{
+      /* একটা কলামের ভেতরে বেঞ্চগুলো সামনে থেকে পেছনে (উপর থেকে নিচে) সাজানো */
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
   }
   .bench-wrap{
       position:relative;
@@ -455,6 +460,9 @@
           grid-template-columns:1fr;
       }
       .direction-cell{ order:-1; }
+      .room-columns{
+          flex-wrap:wrap;
+      }
   }
 
   /* ==============================================================
@@ -527,29 +535,21 @@
           page-break-inside:avoid;
           break-inside:avoid;
       }
-      .row-wrap{
-          /* .row (flex) নিজে break-avoid মানে না, তাই এই non-flex
-             wrapper-এর উপর break-avoid বসানো হলো — এটাই মূল ফিক্স */
-          page-break-inside:avoid;
-          break-inside:avoid-page;
-      }
-      .row{
-          page-break-inside:avoid;
-          break-inside:avoid-page;
-          margin:12px 0;
-          /* === FIX: একটা সারির বেঞ্চগুলো যাতে জায়গা না হলে পরের লাইনে
-             (আলাদা "কলামে") wrap করে ভেঙে না যায়, তাই nowrap বাধ্য করা
-             হলো। এতে সারিটা এক লাইনেই থাকবে এবং জায়গা কম পড়লে নিচের
-             fitRoomToPrintWidth() স্ক্রিপ্ট সঠিকভাবে overflow ধরে পুরো
-             রুমকে zoom দিয়ে ছোট করে পেজের প্রস্থে বসিয়ে দেবে। আগে
-             flex-wrap:wrap থাকায় ব্রাউজার নিজেই ভেঙে দিত, ফলে স্ক্রিপ্ট
-             overflow বুঝতে পারতো না এবং বেঞ্চ ভুল কলামে চলে যেত। */
+      .room-columns{
+          /* কলামগুলো যেন প্রিন্টে wrap করে নিচে না নেমে পাশাপাশি এক
+             লাইনেই থাকে — তাহলেই fitRoomToPrintWidth() ঠিকভাবে
+             scrollWidth মেপে zoom দিয়ে পেজের প্রস্থে ফিট করবে। */
           flex-wrap:nowrap;
+          align-items:flex-start;
+          margin:12px 0;
       }
-      .bench-wrap, .door, .path{
-          /* === FIX: nowrap সারিতে যেন কোনো আইটেম নিজে থেকে শ্রিংক/র‍্যাপ
-             না হয়ে যায়, পুরো আইটেমটা অক্ষত থেকে zoom দিয়েই স্কেল হবে। */
+      .bench-column, .bench-wrap, .door, .path{
           flex-shrink:0;
+      }
+      .bench-wrap, .door{
+          /* একটা বেঞ্চ/দরজা যেন দুই পাতায় ভেঙে না যায় */
+          page-break-inside:avoid;
+          break-inside:avoid-page;
       }
       .bench, .door{
           min-height:52px;
@@ -768,7 +768,8 @@ function showSeat(data){
         });
 
         const twoColClass = line.items.length === 2 && directionItems.length === 0 ? " two-col" : "";
-        return `<div class="info-line boxed${twoColClass}">${cells.join("")}</div>`;
+        const marginStyle = style.marginTop != null ? ` style="margin-top:${style.marginTop}px;"` : "";
+        return `<div class="info-line boxed${twoColClass}"${marginStyle}>${cells.join("")}</div>`;
       }
 
       const spans = line.items.map(function(item){
@@ -834,20 +835,33 @@ function showSeat(data){
     document.getElementById("schoolTable").innerHTML = "";
   }
 
-  // ---------- ৫গ) মূল সিট গ্রিড (বেঞ্চ/দরজা/পথ) রেন্ডার ----------
+  // ---------- ৫গ) মূল সিট গ্রিড (বেঞ্চ/দরজা/পথ) রেন্ডার — কলাম অনুযায়ী ----------
   const seatRows = data.seats || [];
   if(seatRows.length === 0){
     document.getElementById("room").innerHTML = "<p style='text-align:center'>কোনো সিট তথ্য পাওয়া যায়নি।</p>";
     return;
   }
 
-  let html = "";
-  seatRows.forEach(function(rowCells){
-    const benches = clusterIntoBenches(rowCells);
-    const parts = benches.map(renderBench);
-    // প্রিন্টে row দুই পাতায় ভেঙে যাওয়া ঠেকাতে .row-wrap (non-flex) দিয়ে মোড়ানো হলো
-    html += `<div class="row-wrap"><div class="row">${parts.join('<div class="path"></div>')}</div></div>`;
-  });
+  // প্রতিটি Sheet-row থেকে বেঞ্চ ক্লাস্টার বানানো হচ্ছে (খালি পজিশন হলে null),
+  // তারপর কলাম-ইনডেক্স অনুযায়ী উলম্ব স্তম্ভ হিসেবে সাজানো হচ্ছে।
+  const benchGrid = seatRows.map(clusterIntoBenches); // benchGrid[rowIdx][colIdx] = seats[] অথবা null
+
+  const maxCols = benchGrid.reduce(function(max, row){
+    return Math.max(max, row.length);
+  }, 0);
+
+  let html = '<div class="room-columns">';
+  for(let colIdx = 0; colIdx < maxCols; colIdx++){
+    html += '<div class="bench-column">';
+    benchGrid.forEach(function(rowBenches){
+      html += renderBench(rowBenches[colIdx]);
+    });
+    html += '</div>';
+    if(colIdx < maxCols - 1){
+      html += '<div class="path"></div>';
+    }
+  }
+  html += '</div>';
 
   document.getElementById("room").innerHTML = html;
 }
@@ -875,19 +889,19 @@ function classifyRow(items){
     if(items.length === 1){
       return { type: "plain", fontSize: 36, align: "left" };
     }
-    return { type: "boxed-multi", fontSize: 16 };
+    return { type: "boxed-multi", fontSize: 22, marginTop: -6 };
   }
   if(t.indexOf("বেঞ্চের সংখ্যা") !== -1){
     if(items.length === 1){
       return { type: "normal-single", fontSize: 28, align: "left", bold: true };
     }
-    return { type: "boxed-multi", fontSize: 16 };
+    return { type: "boxed-multi", fontSize: 22, marginTop: -8 };
   }
   if(t.indexOf("পরীক্ষার্থীর সংখ্যা") !== -1){
     if(items.length === 1){
       return { type: "normal-single", fontSize: 28, align: "right", bold: true };
     }
-    return { type: "boxed-multi", fontSize: 16 };
+    return { type: "boxed-multi", fontSize: 22, marginTop: -8 };
   }
   if(t.indexOf("বিভাগঃ") !== -1){
     return { type: "normal-single", fontSize: 20, align: "right", bold: true };
@@ -940,6 +954,8 @@ function escapeHtml(str){
 
 // ====================================================================
 // ৯) বেঞ্চ ক্লাস্টারিং
+//    খালি Column-pair বাদ না দিয়ে null রাখা হয়, যাতে প্রতিটি Row-তে
+//    বেঞ্চ-ইনডেক্স (কলাম-পজিশন) সবসময় একই/সোজা থাকে।
 // ====================================================================
 function clusterIntoBenches(rowCells){
   const clusters = [];
@@ -950,9 +966,7 @@ function clusterIntoBenches(rowCells){
     const allEmpty = group.every(function(c){
       return !c || String(c).trim() === "";
     });
-    if(allEmpty) continue;
-
-    clusters.push(group);
+    clusters.push(allEmpty ? null : group);
   }
 
   return clusters;
@@ -960,8 +974,14 @@ function clusterIntoBenches(rowCells){
 
 // ====================================================================
 // ১০) একটা বেঞ্চ (বা দরজা) HTML হিসেবে রেন্ডার করা
+//     seats === null মানে এই কলাম-পজিশনে এই Row-তে বেঞ্চ নেই —
+//     কলাম-বিন্যাস ঠিক রাখতে জায়গাটা অদৃশ্য বেঞ্চ দিয়ে পূরণ করা হয়।
 // ====================================================================
 function renderBench(seats){
+  if(!seats){
+    return `<div class="bench-wrap"><div class="bench" style="visibility:hidden;"></div></div>`;
+  }
+
   const hasDoor = seats.some(function(s){
     return String(s).toLowerCase() === "door";
   });
@@ -991,7 +1011,7 @@ function renderSeat(value){
 
 // ====================================================================
 // ১২ক) প্রিন্টের সময় কনটেন্ট পেজের প্রস্থে অটো-ফিট করা (zoom দিয়ে)
-//      যাতে বেঞ্চের সারি বা হেডার লাইন wrap/ভেঙে না যায়।
+//      যাতে বেঞ্চের কলামগুলো wrap/ভেঙে না যায়।
 // ====================================================================
 function fitRoomToPrintWidth(){
   const room = document.querySelector(".room");
