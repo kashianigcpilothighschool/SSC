@@ -964,6 +964,33 @@ function renderSeat(value){
 }
 
 // ====================================================================
+// ১২ক) প্রিন্টের সময় কনটেন্ট পেজের প্রস্থে অটো-ফিট করা (zoom দিয়ে)
+//      যাতে বেঞ্চের সারি বা হেডার লাইন wrap/ভেঙে না যায়।
+// ====================================================================
+function fitRoomToPrintWidth(){
+  const room = document.querySelector(".room");
+  if(!room) return;
+
+  room.style.zoom = 1; // আগের স্কেল রিসেট করে আসল প্রস্থ মাপা
+
+  // @page { size:legal; margin:10mm 12mm; } অনুযায়ী usable প্রস্থ (mm -> px)
+  const pageWidthMM = 216 - (2 * 12); // legal প্রস্থ ২১৬mm বাদ বাম+ডান মার্জিন
+  const pageWidthPx = pageWidthMM * (96 / 25.4);
+
+  const contentWidth = room.scrollWidth;
+  if(contentWidth > pageWidthPx){
+    const scale = pageWidthPx / contentWidth;
+    room.style.zoom = scale;
+  }
+}
+
+window.addEventListener("beforeprint", fitRoomToPrintWidth);
+window.addEventListener("afterprint", function(){
+  const room = document.querySelector(".room");
+  if(room) room.style.zoom = 1;
+});
+
+// ====================================================================
 // ১২) এরর হ্যান্ডলার (fetch/backend কল ফেইল হলে)
 // ====================================================================
 function showError(err){
