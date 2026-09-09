@@ -225,6 +225,32 @@
       white-space:nowrap;
   }
 
+  .room-info-table{
+      width:100%;
+      max-width:920px;
+      margin:4px auto 10px auto;
+      border-collapse:collapse;
+  }
+  .room-info-table td{
+      border:1px solid #444;
+      padding:7px 16px;
+      font-family:'Kalpurush','Hind Siliguri',sans-serif;
+      font-weight:700;
+      font-size:22px;
+      color:var(--ink);
+      background:var(--card);
+  }
+  .room-info-table td:first-child{ text-align:left; }
+  .room-info-table td:last-child{ text-align:right; }
+  .room-info-table .ri-dir{
+      text-align:center;
+      font-size:32px;
+      width:28%;
+  }
+  .room-info-table .ri-dir .compass-line{
+      margin:8px auto 2px auto;
+  }
+
   .small-box-wrap{
       text-align:center;
       margin:0px auto 2px auto;
@@ -783,10 +809,63 @@ function showSeat(data){
       return `<div class="info-line multi${extraClass}" style="font-size:${style.fontSize}px;">${spans}</div>${compassLineMulti}`;
     }
 
+    // ---------- কক্ষ নংঃ+মুখী+বিভাগঃ এবং বেঞ্চের সংখ্যা+পরীক্ষার্থীর সংখ্যা —
+    //            এই দুইটা লাইন একসাথে থাকলে সীমানাযুক্ত (bordered) একটা
+    //            টেবিলে মার্জ করে দেখানো হয় (স্ক্রিনশটের মতো), যেখানে
+    //            মুখী-এর ঘরটি দুই সারি জুড়ে (rowspan) থাকে। ----------
+    function canMergeRoomTable(line1, line2){
+      if(!line1 || !line2) return false;
+      if(line1.style.type !== "boxed-multi" || line2.style.type !== "boxed-multi") return false;
+      const hasDirection1 = line1.items.some(isDirectionText);
+      const hasDirection2 = line2.items.some(isDirectionText);
+      return hasDirection1 && !hasDirection2;
+    }
+
+    function renderRoomInfoTable(line1, line2){
+      const dirIndex = line1.items.findIndex(isDirectionText);
+      const dirText = line1.items[dirIndex];
+      const others1 = line1.items.filter(function(item, idx){ return idx !== dirIndex; });
+      const others2 = line2.items.slice();
+
+      const left1 = others1[0] || "";
+      const right1 = others1[1] || "";
+      const left2 = others2[0] || "";
+      const right2 = others2[1] || "";
+
+      return `
+        <table class="room-info-table">
+          <tr>
+            <td>${escapeHtml(left1)}</td>
+            <td class="ri-dir" rowspan="2">${escapeHtml(dirText)}<div class="compass-line">${COMPASS_SVG}</div></td>
+            <td>${escapeHtml(right1)}</td>
+          </tr>
+          <tr>
+            <td>${escapeHtml(left2)}</td>
+            <td>${escapeHtml(right2)}</td>
+          </tr>
+        </table>
+      `;
+    }
+
+    function renderBoxGroupLines(lines){
+      const parts = [];
+      for(let i = 0; i < lines.length; i++){
+        const line = lines[i];
+        const next = lines[i + 1];
+        if(canMergeRoomTable(line, next)){
+          parts.push(renderRoomInfoTable(line, next));
+          i++; // পরের লাইনটা ইতিমধ্যে ব্যবহার হয়ে গেছে, তাই স্কিপ
+          continue;
+        }
+        parts.push(renderBoxLine(line));
+      }
+      return parts.join("");
+    }
+
     // ---------- সব গ্রুপকে একসাথে জোড়া দিয়ে চূড়ান্ত ইনফো-বক্স HTML বানানো ----------
     const infoHtml = groups.map(function(group){
       if(group.type === "box"){
-        return `<div class="info-box">${group.lines.map(renderBoxLine).join("")}</div>`;
+        return `<div class="info-box">${renderBoxGroupLines(group.lines)}</div>`;
       }
       if(group.type === "plain"){
         const alignStyle = group.style.align === "left" ? "text-align:left;" : "";
